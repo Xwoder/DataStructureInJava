@@ -2,7 +2,6 @@ package 二叉树.二叉搜索树;
 
 import Tools.printer.BinaryTreeInfo;
 import 二叉树.AbstractBinaryTree;
-import 公共类.Visitor;
 
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -59,6 +58,9 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree implements BinaryT
 
     public MyBinarySearchTree(Comparator<E> comparator) {
         this.comparator = comparator;
+    }
+
+    public static void main(String[] args) {
     }
 
     public void add(E element) {
@@ -273,6 +275,34 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree implements BinaryT
         visitor.visit(root.element);
     }
 
+    /**
+     * 获取指定节点的前驱结点
+     *
+     * @param node 指定节点
+     *
+     * @return 前驱节点
+     */
+    protected Node<E> predecessor(Node<E> node) {
+        if (node == null) {
+            return null;
+        }
+
+        Node<E> p = node.left;
+        if (p != null) {
+            while (p.right != null) {
+                p = p.right;
+            }
+            return p;
+        }
+
+        while (node.parent != null && node == node.parent.left) {
+            node = node.parent;
+        }
+
+
+        return node.parent;
+    }
+
     /* 先序遍历 */
     public void preorderTraversal(Visitor<E> visitor) {
         if (root == null || visitor == null) {
@@ -296,7 +326,6 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree implements BinaryT
 
     }
 
-
     @Override
     public Node<E> right(Node<E> node) {
         return node.right;
@@ -315,5 +344,36 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree implements BinaryT
     public Object string(Node<E> node) {
         E parentElement = (node.parent == null) ? null : node.parent.element;
         return node.element + "_p(" + parentElement + ')';
+    }
+
+    /**
+     * 获取指定节点的后继结点
+     *
+     * @param node 指定节点
+     *
+     * @return 后继节点
+     */
+    protected Node<E> successor(Node<E> node) {
+        if (node == null) {
+            return null;
+        }
+
+        Node<E> p = node.right;
+        if (p != null) {
+            while (p.left != null) {
+                p = p.left;
+            }
+            return p;
+        }
+
+        while (node.parent != null && node == node.parent.right) {
+            node = node.parent;
+        }
+
+        return node.parent;
+    }
+
+    public static abstract class Visitor<E> {
+        abstract void visit(E element);
     }
 }

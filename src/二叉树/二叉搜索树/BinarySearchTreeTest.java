@@ -1,8 +1,7 @@
 package 二叉树.二叉搜索树;
 
-import 公共类.Person;
 import Tools.printer.BinaryTrees;
-import 公共类.Visitor;
+import 公共类.Person;
 
 import java.util.Comparator;
 import java.util.Random;
@@ -11,12 +10,7 @@ public class BinarySearchTreeTest {
 
     public static void main(String[] args) {
         {
-            MyBinarySearchTree<Integer> bst1 = new MyBinarySearchTree(new Comparator<Integer>() {
-                @Override
-                public int compare(Integer o1, Integer o2) {
-                    return o1 - o2;
-                }
-            });
+            MyBinarySearchTree<Integer> bst1 = new MyBinarySearchTree<>(Comparator.comparingInt(o -> o));
 
             bst1.add(20);
             bst1.add(10);
@@ -62,7 +56,7 @@ public class BinarySearchTreeTest {
 
             BinaryTrees.println(bst4);
 
-            bst4.preorderTraversal(new Visitor<Integer>() {
+            bst4.preorderTraversal(new MyBinarySearchTree.Visitor<>() {
                 @Override
                 public void visit(Integer node) {
                     System.out.print(node + ", ");
@@ -70,7 +64,7 @@ public class BinarySearchTreeTest {
             });
             System.out.println();
 
-            bst4.inorderTraversal(new Visitor<Integer>() {
+            bst4.inorderTraversal(new MyBinarySearchTree.Visitor<>() {
                 @Override
                 public void visit(Integer node) {
                     System.out.print(node + ", ");
@@ -78,7 +72,7 @@ public class BinarySearchTreeTest {
             });
             System.out.println();
 
-            bst4.postorderTraversal(new Visitor<Integer>() {
+            bst4.postorderTraversal(new MyBinarySearchTree.Visitor<>() {
                 @Override
                 public void visit(Integer node) {
                     System.out.print(node + ", ");
@@ -86,7 +80,7 @@ public class BinarySearchTreeTest {
             });
             System.out.println();
 
-            bst4.levelOrderTraversal(new Visitor<Integer>() {
+            bst4.levelOrderTraversal(new MyBinarySearchTree.Visitor<>() {
                 @Override
                 public void visit(Integer node) {
                     System.out.print(node + ", ");
