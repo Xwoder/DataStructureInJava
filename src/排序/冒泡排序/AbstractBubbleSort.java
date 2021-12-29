@@ -8,14 +8,7 @@ public abstract class AbstractBubbleSort<E extends Comparable<E>> extends Sort<E
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         for (int i = 0; i < elements.length - 1; i++) {
-            if (i == boundaryIndex) {
-                sb.append("| ");
-            }
-            sb.append(elements[i]).append(", ");
-        }
-
-        if (elements.length - 1 == boundaryIndex) {
-            sb.append("| ");
+            sb.append(elements[i]).append(i + 1 == boundaryIndex ? " | " : ", ");
         }
 
         sb.append(elements[elements.length - 1]).append("]");
