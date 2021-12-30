@@ -120,7 +120,7 @@ public class BinarySearchTreeTest {
 
             System.out.println("------");
             MyBinarySearchTree<Integer> bst = new MyBinarySearchTree<>();
-            Integer[] nums = new Integer[]{9,11,10,12};
+            Integer[] nums = new Integer[]{9, 11, 10, 12};
             System.out.println(Arrays.toString(nums));
 
             for (Integer num : nums) {

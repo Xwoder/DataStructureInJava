@@ -1,54 +1,17 @@
 package 二叉树.二叉搜索树;
 
-import Tools.printer.BinaryTreeInfo;
 import 二叉树.AbstractBinaryTree;
+import 二叉树.BinaryNode;
 
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Queue;
 
-class Node<E> {
-    E element;
-    Node<E> left;
-    Node<E> right;
-    Node<E> parent;
-
-    public Node(E element) {
-        this.element = element;
-    }
-
-    public Node(E element, Node<E> parent) {
-        this.element = element;
-        this.parent = parent;
-    }
-
-    /**
-     * 是否节点的度为2
-     */
-    public boolean hasTwoChildren() {
-        return this.left != null && this.right != null;
-    }
-
-    /**
-     * 是否叶子节点
-     */
-    public boolean isLeaf() {
-        return this.left == null && this.right == null;
-    }
-
-    @Override
-    public String toString() {
-        return "Node(" + element + ')';
-    }
-}
-
-public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> implements BinaryTreeInfo<Node<E>> {
+public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
 
     /* 比较器 */
     private final Comparator<E> comparator;
-    private int size;
-    /* 根节点 */
-    private Node<E> root;
+
 
     public MyBinarySearchTree() {
         this(null);
@@ -64,10 +27,10 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> implements Bina
     public void add(E element) {
         elementNotNullCheck(element);
         if (root == null) {
-            root = new Node<>(element, null);
+            root = new BinaryNode<>(element, null);
         } else {
-            Node<E> parent = null;
-            Node<E> cur = root;
+            BinaryNode<E> parent = null;
+            BinaryNode<E> cur = root;
 
             int compareResult = 0;
             while (cur != null) {
@@ -83,7 +46,7 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> implements Bina
                 }
             }
 
-            Node<E> newNode = new Node<>(element, parent);
+            BinaryNode<E> newNode = new BinaryNode<>(element, parent);
             if (compareResult < 0) {
                 parent.left = newNode;
             } else if (compareResult > 0) {
@@ -126,12 +89,12 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> implements Bina
         }
 
 
-        Queue<Node<E>> queue = new LinkedList<>();
+        Queue<BinaryNode<E>> queue = new LinkedList<>();
         queue.offer(root);
 
         int levelSize = 1;
         while (!queue.isEmpty()) {
-            Node<E> node = queue.poll();
+            BinaryNode<E> node = queue.poll();
             --levelSize;
 
             if (node.left != null) {
@@ -160,7 +123,7 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> implements Bina
         return heightRecursive(root);
     }
 
-    private int heightRecursive(Node<E> node) {
+    private int heightRecursive(BinaryNode<E> node) {
         if (node == null) {
             return 0;
         }
@@ -179,7 +142,7 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> implements Bina
         inorderTraversal(root, visitor);
     }
 
-    private void inorderTraversal(Node<E> root, Visitor<E> visitor) {
+    private void inorderTraversal(BinaryNode<E> root, Visitor<E> visitor) {
         if (root == null) {
             return;
         }
@@ -195,12 +158,12 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> implements Bina
             return false;
         }
 
-        Queue<Node<E>> queue = new LinkedList<>();
+        Queue<BinaryNode<E>> queue = new LinkedList<>();
         queue.offer(root);
 
         boolean requireLeafNode = false;
         while (!queue.isEmpty()) {
-            Node<E> node = queue.poll();
+            BinaryNode<E> node = queue.poll();
 
             if (requireLeafNode && !node.isLeaf()) {
                 return false;
@@ -224,25 +187,17 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> implements Bina
 
     }
 
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    @Override
-    public Node<E> left(Node<E> node) {
-        return node.left;
-    }
 
     public void levelOrderTraversal(Visitor<E> visitor) {
         if (root == null || visitor == null) {
             return;
         }
 
-        Queue<Node<E>> queue = new LinkedList<>();
+        Queue<BinaryNode<E>> queue = new LinkedList<>();
         queue.offer(root);
 
         while (!queue.isEmpty()) {
-            Node<E> node = queue.poll();
+            BinaryNode<E> node = queue.poll();
             visitor.visit(node.element);
             if (node.left != null) {
                 queue.offer(node.left);
@@ -255,8 +210,8 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> implements Bina
     }
 
 
-    private Node<E> node(E element) {
-        Node<E> cur = root;
+    private BinaryNode<E> node(E element) {
+        BinaryNode<E> cur = root;
         while (cur != null) {
             int compareResult = compare(element, cur.element);
             if (compareResult < 0) {
@@ -279,7 +234,7 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> implements Bina
         postorderTraversal(root, visitor);
     }
 
-    private void postorderTraversal(Node<E> root, Visitor<E> visitor) {
+    private void postorderTraversal(BinaryNode<E> root, Visitor<E> visitor) {
 
         if (root == null) {
             return;
@@ -297,12 +252,12 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> implements Bina
      *
      * @return 前驱节点
      */
-    protected Node<E> predecessor(Node<E> node) {
+    protected BinaryNode<E> predecessor(BinaryNode<E> node) {
         if (node == null) {
             return null;
         }
 
-        Node<E> p = node.left;
+        BinaryNode<E> p = node.left;
         if (p != null) {
             while (p.right != null) {
                 p = p.right;
@@ -326,7 +281,7 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> implements Bina
         preorderTraversal(root, visitor);
     }
 
-    private void preorderTraversal(Node<E> root, Visitor<E> visitor) {
+    private void preorderTraversal(BinaryNode<E> root, Visitor<E> visitor) {
 
         if (root == null) {
             return;
@@ -341,22 +296,22 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> implements Bina
         remove(node(element));
     }
 
-    private void remove(Node<E> node) {
+    private void remove(BinaryNode<E> node) {
         if (node == null) {
             return;
         }
 
-        Node<E> nodeToBeDeleted = node;
+        BinaryNode<E> nodeToBeDeleted = node;
 
         if (nodeToBeDeleted.hasTwoChildren()) {
-            Node<E> predecessor = predecessor(nodeToBeDeleted);
+            BinaryNode<E> predecessor = predecessor(nodeToBeDeleted);
             nodeToBeDeleted.element = predecessor.element;
 
             nodeToBeDeleted = predecessor;
         }
 
         if (nodeToBeDeleted.isLeaf()) {
-            Node<E> parent = nodeToBeDeleted.parent;
+            BinaryNode<E> parent = nodeToBeDeleted.parent;
             if (parent == null) {
                 root = null;
             } else {
@@ -383,25 +338,6 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> implements Bina
         --size;
     }
 
-    @Override
-    public Node<E> right(Node<E> node) {
-        return node.right;
-    }
-
-    @Override
-    public Node<E> root() {
-        return root;
-    }
-
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public Object string(Node<E> node) {
-        E parentElement = (node.parent == null) ? null : node.parent.element;
-        return node.element + "_p(" + parentElement + ')';
-    }
 
     /**
      * 获取指定节点的后继结点
@@ -410,12 +346,12 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> implements Bina
      *
      * @return 后继节点
      */
-    protected Node<E> successor(Node<E> node) {
+    protected BinaryNode<E> successor(BinaryNode<E> node) {
         if (node == null) {
             return null;
         }
 
-        Node<E> p = node.right;
+        BinaryNode<E> p = node.right;
         if (p != null) {
             while (p.left != null) {
                 p = p.left;
