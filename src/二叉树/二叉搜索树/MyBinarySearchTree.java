@@ -24,8 +24,6 @@ class Node<E> {
 
     /**
      * 是否节点的度为2
-     *
-     * @return
      */
     public boolean hasTwoChildren() {
         return this.left != null && this.right != null;
@@ -44,13 +42,13 @@ class Node<E> {
     }
 }
 
-public class MyBinarySearchTree<E> extends AbstractBinaryTree implements BinaryTreeInfo<Node<E>> {
+public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> implements BinaryTreeInfo<Node<E>> {
 
     /* 比较器 */
     private final Comparator<E> comparator;
     private int size;
     /* 根节点 */
-    private Node root;
+    private Node<E> root;
 
     public MyBinarySearchTree() {
         this(null);
