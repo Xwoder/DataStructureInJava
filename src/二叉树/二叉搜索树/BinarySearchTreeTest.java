@@ -3,6 +3,7 @@ package 二叉树.二叉搜索树;
 import Tools.printer.BinaryTrees;
 import 公共类.Person;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 
@@ -114,6 +115,25 @@ public class BinarySearchTreeTest {
             System.out.println(bst.isComplete());
         }
 
+
+        {
+
+            System.out.println("------");
+            MyBinarySearchTree<Integer> bst = new MyBinarySearchTree<>();
+            Integer[] nums = new Integer[]{9,11,10,12};
+            System.out.println(Arrays.toString(nums));
+
+            for (Integer num : nums) {
+                bst.add(num);
+            }
+
+            BinaryTrees.println(bst);
+            System.out.println(bst.isComplete());
+
+            bst.remove(9);
+            BinaryTrees.println(bst);
+
+        }
 
     }
 }

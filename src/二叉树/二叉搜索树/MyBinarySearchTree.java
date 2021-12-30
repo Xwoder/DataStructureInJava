@@ -111,7 +111,7 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree implements BinaryT
     }
 
     public boolean contains(E element) {
-        return false;
+        return node(element) != null;
     }
 
     private void elementNotNullCheck(E element) {
@@ -256,6 +256,23 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree implements BinaryT
         }
     }
 
+
+    private Node<E> node(E element) {
+        Node<E> cur = root;
+        while (cur != null) {
+            int compareResult = compare(element, cur.element);
+            if (compareResult < 0) {
+                cur = cur.left;
+            } else if (compareResult > 0) {
+                cur = cur.right;
+            } else {
+                return cur;
+            }
+        }
+
+        return null;
+    }
+
     /* 后续遍历 */
     public void postorderTraversal(Visitor<E> visitor) {
         if (root == null || visitor == null) {
@@ -323,7 +340,49 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree implements BinaryT
     }
 
     public void remove(E element) {
+        remove(node(element));
+    }
 
+    private void remove(Node<E> node) {
+        if (node == null) {
+            return;
+        }
+
+        Node<E> nodeToBeDeleted = node;
+
+        if (nodeToBeDeleted.hasTwoChildren()) {
+            Node<E> predecessor = predecessor(nodeToBeDeleted);
+            nodeToBeDeleted.element = predecessor.element;
+
+            nodeToBeDeleted = predecessor;
+        }
+
+        if (nodeToBeDeleted.isLeaf()) {
+            Node<E> parent = nodeToBeDeleted.parent;
+            if (parent == null) {
+                root = null;
+            } else {
+                if (parent.left == nodeToBeDeleted) {
+                    parent.left = null;
+                } else {
+                    parent.right = null;
+                }
+            }
+        } else {
+            if (nodeToBeDeleted.parent == null) {
+                root = nodeToBeDeleted.left != null ? node.right : node.left;
+            } else {
+                if (nodeToBeDeleted.left == null) {
+                    nodeToBeDeleted.element = nodeToBeDeleted.right.element;
+                    nodeToBeDeleted.right = null;
+                } else {
+                    nodeToBeDeleted.element = nodeToBeDeleted.left.element;
+                    nodeToBeDeleted.left = null;
+                }
+            }
+        }
+
+        --size;
     }
 
     @Override
