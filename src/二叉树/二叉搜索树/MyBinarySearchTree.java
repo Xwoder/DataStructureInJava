@@ -129,8 +129,6 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
             return;
         }
 
-        BinaryNode<E> nodeToBeDeleted = node;
-
         if (node.isLeaf()) {
             /*
              * 如果是叶子节点，则直接删除该节点
