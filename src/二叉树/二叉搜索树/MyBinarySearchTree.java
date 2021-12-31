@@ -4,8 +4,6 @@ import 二叉树.AbstractBinaryTree;
 import 二叉树.BinaryNode;
 
 import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
 
@@ -58,10 +56,6 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
         ++size;
     }
 
-    public void clear() {
-        size = 0;
-        root = null;
-    }
 
     private int compare(E o1, E o2) {
         if (comparator == null) {
@@ -71,9 +65,6 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
         }
     }
 
-    public boolean contains(E element) {
-        return node(element) != null;
-    }
 
     private void elementNotNullCheck(E element) {
         if (element == null) {
@@ -81,136 +72,8 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
         }
     }
 
-    public int heightNonRecursive() {
 
-        int height = 0;
-        if (root == null) {
-            return height;
-        }
-
-
-        Queue<BinaryNode<E>> queue = new LinkedList<>();
-        queue.offer(root);
-
-        int levelSize = 1;
-        while (!queue.isEmpty()) {
-            BinaryNode<E> node = queue.poll();
-            --levelSize;
-
-            if (node.left != null) {
-                queue.offer(node.left);
-            }
-
-            if (node.right != null) {
-                queue.offer(node.right);
-            }
-
-            if (levelSize == 0) {
-                levelSize = queue.size();
-                ++height;
-            }
-        }
-
-        return height;
-    }
-
-    /**
-     * 高度，递归实现
-     *
-     * @return 高度
-     */
-    public int heightRecursive() {
-        return heightRecursive(root);
-    }
-
-    private int heightRecursive(BinaryNode<E> node) {
-        if (node == null) {
-            return 0;
-        }
-
-        int leftHeight = heightRecursive(node.left);
-        int rightHeight = heightRecursive(node.right);
-        return 1 + Math.max(leftHeight, rightHeight);
-    }
-
-    /* 中序遍历 */
-    public void inorderTraversal(Visitor<E> visitor) {
-
-        if (root == null || visitor == null) {
-            return;
-        }
-        inorderTraversal(root, visitor);
-    }
-
-    private void inorderTraversal(BinaryNode<E> root, Visitor<E> visitor) {
-        if (root == null) {
-            return;
-        }
-
-        inorderTraversal(root.left, visitor);
-        visitor.visit(root.element);
-        inorderTraversal(root.right, visitor);
-    }
-
-    @Override
-    public boolean isComplete() {
-        if (root == null) {
-            return false;
-        }
-
-        Queue<BinaryNode<E>> queue = new LinkedList<>();
-        queue.offer(root);
-
-        boolean requireLeafNode = false;
-        while (!queue.isEmpty()) {
-            BinaryNode<E> node = queue.poll();
-
-            if (requireLeafNode && !node.isLeaf()) {
-                return false;
-            }
-
-            if (node.left != null) {
-                queue.offer(node.left);
-            } else if (node.right != null) {
-                return false;
-            }
-
-
-            if (node.right != null) {
-                queue.offer(node.right);
-            } else {
-                // 要求后续节点是叶子节点
-                requireLeafNode = true;
-            }
-        }
-        return true;
-
-    }
-
-
-    public void levelOrderTraversal(Visitor<E> visitor) {
-        if (root == null || visitor == null) {
-            return;
-        }
-
-        Queue<BinaryNode<E>> queue = new LinkedList<>();
-        queue.offer(root);
-
-        while (!queue.isEmpty()) {
-            BinaryNode<E> node = queue.poll();
-            visitor.visit(node.element);
-            if (node.left != null) {
-                queue.offer(node.left);
-            }
-
-            if (node.right != null) {
-                queue.offer(node.right);
-            }
-        }
-    }
-
-
-    private BinaryNode<E> node(E element) {
+    protected BinaryNode<E> node(E element) {
         BinaryNode<E> cur = root;
         while (cur != null) {
             int compareResult = compare(element, cur.element);
@@ -226,24 +89,6 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
         return null;
     }
 
-    /* 后续遍历 */
-    public void postorderTraversal(Visitor<E> visitor) {
-        if (root == null || visitor == null) {
-            return;
-        }
-        postorderTraversal(root, visitor);
-    }
-
-    private void postorderTraversal(BinaryNode<E> root, Visitor<E> visitor) {
-
-        if (root == null) {
-            return;
-        }
-
-        postorderTraversal(root.left, visitor);
-        postorderTraversal(root.right, visitor);
-        visitor.visit(root.element);
-    }
 
     /**
      * 获取指定节点的前驱结点
@@ -273,26 +118,9 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
         return node.parent;
     }
 
-    /* 先序遍历 */
-    public void preorderTraversal(Visitor<E> visitor) {
-        if (root == null || visitor == null) {
-            return;
-        }
-        preorderTraversal(root, visitor);
-    }
 
-    private void preorderTraversal(BinaryNode<E> root, Visitor<E> visitor) {
-
-        if (root == null) {
-            return;
-        }
-
-        visitor.visit(root.element);
-        preorderTraversal(root.left, visitor);
-        preorderTraversal(root.right, visitor);
-    }
-
-    public void remove(E element) {
+    @Override
+    protected void remove(E element) {
         remove(node(element));
     }
 
@@ -303,41 +131,66 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
 
         BinaryNode<E> nodeToBeDeleted = node;
 
-        if (nodeToBeDeleted.hasTwoChildren()) {
-            BinaryNode<E> predecessor = predecessor(nodeToBeDeleted);
-            nodeToBeDeleted.element = predecessor.element;
+        if (node.isLeaf()) {
+            /*
+             * 如果是叶子节点，则直接删除该节点
+             */
+            if (node.parent.left == node /* 若待删除的节点在父节点的左子树上 */) {
+                node.parent.left = null;
+            } else if (node.parent.right == node /* 若待删除的节点在父节点的右子树上 */) {
+                node.parent.right = null;
+            } else {
+                // 该分支中的代码不可能被执行
+                return;
+            }
+        } else if (node.left == null || node.right == null) {
+            /*
+             * 仅有一个子节点
+             */
+            BinaryNode<E> parent = node.parent;
 
-            nodeToBeDeleted = predecessor;
-        }
-
-        if (nodeToBeDeleted.isLeaf()) {
-            BinaryNode<E> parent = nodeToBeDeleted.parent;
             if (parent == null) {
-                root = null;
-            } else {
-                if (parent.left == nodeToBeDeleted) {
-                    parent.left = null;
+                /* 是根节点 */
+                if (root.left != null) {
+                    root = node.left;
+                } else if (root.right != null) {
+                    root = node.right;
                 } else {
-                    parent.right = null;
+                    throw new RuntimeException("本条件分支不应该被执行");
+                }
+                root.parent = null;
+            } else {
+                if (node.left == null) {
+                    if (parent.left == node) {
+                        parent.left = node.right;
+                    } else if (parent.right == node) {
+                        parent.right = node.right;
+                    } else {
+                        throw new RuntimeException("本条件分支不应该被执行");
+                    }
+                    node.right.parent = parent;
+                } else if (node.right == null) {
+                    if (parent.left == node) {
+                        parent.left = node.left;
+                    } else if (parent.right == node) {
+                        parent.right = node.left;
+                    } else {
+                        // 该分支中的代码不可能被执行
+                        throw new RuntimeException("本条件分支不应该被执行");
+                    }
+                    node.left.parent = parent;
                 }
             }
-        } else {
-            if (nodeToBeDeleted.parent == null) {
-                root = nodeToBeDeleted.left != null ? node.right : node.left;
-            } else {
-                if (nodeToBeDeleted.left == null) {
-                    nodeToBeDeleted.element = nodeToBeDeleted.right.element;
-                    nodeToBeDeleted.right = null;
-                } else {
-                    nodeToBeDeleted.element = nodeToBeDeleted.left.element;
-                    nodeToBeDeleted.left = null;
-                }
-            }
-        }
 
+        } else if (node.hasTwoChildren()) {
+            BinaryNode<E> s = successor(node);
+            node.element = s.element;
+            remove(s);
+        } else {
+            throw new RuntimeException("本条件分支不应该被执行");
+        }
         --size;
     }
-
 
     /**
      * 获取指定节点的后继结点
@@ -366,7 +219,5 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
         return node.parent;
     }
 
-    public static abstract class Visitor<E> {
-        abstract void visit(E element);
-    }
+
 }

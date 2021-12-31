@@ -1,11 +1,13 @@
 package 二叉树.二叉搜索树;
 
 import Tools.printer.BinaryTrees;
+import Tools.tools.Integers;
 import 公共类.Person;
 
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
+import java.util.random.RandomGenerator;
 
 public class BinarySearchTreeTest {
 
@@ -119,18 +121,23 @@ public class BinarySearchTreeTest {
         {
 
             System.out.println("------");
+
+
+            Integer[] nums = Integers.random(10, 1, 10);
+
             MyBinarySearchTree<Integer> bst = new MyBinarySearchTree<>();
-            Integer[] nums = new Integer[]{9, 11, 10, 12};
-            System.out.println(Arrays.toString(nums));
 
             for (Integer num : nums) {
                 bst.add(num);
             }
 
-            BinaryTrees.println(bst);
-            System.out.println(bst.isComplete());
+            System.out.println(Arrays.toString(nums));
 
-            bst.remove(9);
+            BinaryTrees.println(bst);
+
+            Integer elementToBeRemoved = nums[RandomGenerator.getDefault().nextInt(10)];
+            System.out.println(elementToBeRemoved);
+            bst.remove(elementToBeRemoved);
             BinaryTrees.println(bst);
 
         }
