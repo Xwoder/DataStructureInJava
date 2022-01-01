@@ -64,25 +64,21 @@ public class AVLTree<E> extends MyBinarySearchTree<E> {
     }
 
     private void afterRotate(AVLTreeNode<E> parent, AVLTreeNode<E> grand, AVLTreeNode<E> transferred) {
-        // 让parent称为子树的根节点
         parent.parent = grand.parent;
         if (grand.isLeftChild()) {
             grand.parent.left = parent;
         } else if (grand.isRightChild()) {
             grand.parent.right = parent;
-        } else { // grand是root节点
+        } else {
             root = parent;
         }
 
-        // 更新child的parent
         if (transferred != null) {
             transferred.parent = grand;
         }
 
-        // 更新grand的parent
         grand.parent = parent;
 
-        // 更新高度
         grand.updateHeight();
         parent.updateHeight();
     }
