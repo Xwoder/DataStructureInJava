@@ -45,67 +45,48 @@ public class AVLTree<E> extends MyBinarySearchTree<E> {
         return Math.abs(node.balanceFactor()) <= 1;
     }
 
-    /**
-     * 向右旋转
-     *
-     * @param grand 节点
-     */
     private void rotateLeft(AVLTreeNode<E> grand) {
         AVLTreeNode<E> parent = (AVLTreeNode<E>) grand.right;
-
-        grand.right = parent.left;
+        AVLTreeNode<E> child = (AVLTreeNode<E>) parent.left;
+        grand.right = child;
         parent.left = grand;
 
-        parent.parent = grand.parent;
-        if (grand.isLeftChild()) {
-            grand.parent.left = parent;
-        } else if (grand.isRightChild()) {
-            grand.parent.right = parent;
-        } else {
-            root = parent;
-        }
-
-        AVLTreeNode<E> parentLeft = ((AVLTreeNode<E>) parent.left);
-        if (parentLeft != null) {
-            parentLeft.parent = grand;
-        }
-
-        grand.parent = parent;
-
-        grand.updateHeight();
-        parent.updateHeight();
+        afterRotate(parent, grand, child);
     }
 
-    /**
-     * 向左旋转
-     *
-     * @param grand 节点
-     */
     private void rotateRight(AVLTreeNode<E> grand) {
         AVLTreeNode<E> parent = (AVLTreeNode<E>) grand.left;
-        AVLTreeNode<E> child = ((AVLTreeNode<E>) parent.right);
-
-        grand.left = parent.right;
+        AVLTreeNode<E> transferred = (AVLTreeNode<E>) parent.right;
+        grand.left = transferred;
         parent.right = grand;
 
+        afterRotate(parent, grand, transferred);
+    }
+
+    private void afterRotate(AVLTreeNode<E> parent, AVLTreeNode<E> grand, AVLTreeNode<E> transferred) {
+        // 让parent称为子树的根节点
         parent.parent = grand.parent;
         if (grand.isLeftChild()) {
             grand.parent.left = parent;
         } else if (grand.isRightChild()) {
             grand.parent.right = parent;
-        } else {
+        } else { // grand是root节点
             root = parent;
         }
 
-        if (child != null) {
-            child.parent = grand;
+        // 更新child的parent
+        if (transferred != null) {
+            transferred.parent = grand;
         }
 
+        // 更新grand的parent
         grand.parent = parent;
 
+        // 更新高度
         grand.updateHeight();
         parent.updateHeight();
     }
+
 
     @Override
     public Object string(BinaryNode<E> node) {
