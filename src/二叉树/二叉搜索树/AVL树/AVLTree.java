@@ -19,8 +19,6 @@ public class AVLTree<E> extends MyBinarySearchTree<E> {
     @Override
     protected void afterAdd(BinaryNode<E> node) {
         super.afterAdd(node);
-        System.out.println("旋转前");
-        BinaryTrees.println(this);
         AVLTreeNode<E> avlNode = (AVLTreeNode<E>) node;
         while (avlNode != null) {
             if (isBalanced(avlNode)) {
@@ -113,11 +111,7 @@ public class AVLTree<E> extends MyBinarySearchTree<E> {
             } else {
                 /* RL */
                 rotateRight(parent);
-                System.out.println("右旋");
-                BinaryTrees.println(this);
                 rotateLeft(grand);
-                System.out.println("左旋");
-                BinaryTrees.println(this);
             }
         }
     }
