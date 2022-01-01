@@ -185,10 +185,6 @@ public class AVLTree<E> extends MyBinarySearchTree<E> {
 
             height = 1 + Math.max(leftHeight, rightHeight);
         }
-
-
     }
-
-
 }
 
