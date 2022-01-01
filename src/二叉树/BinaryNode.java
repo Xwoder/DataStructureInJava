@@ -2,10 +2,10 @@ package 二叉树;
 
 public class BinaryNode<E> {
 
+    public E element;
+    public BinaryNode<E> parent;
     public BinaryNode<E> left;
     public BinaryNode<E> right;
-    public BinaryNode<E> parent;
-    public E element;
 
     public BinaryNode(E element) {
         this.element = element;
@@ -15,6 +15,7 @@ public class BinaryNode<E> {
         this.element = element;
         this.parent = parent;
     }
+
 
     /**
      * 是否节点的度为2

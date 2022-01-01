@@ -10,7 +10,6 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
     /* 比较器 */
     private final Comparator<E> comparator;
 
-
     public MyBinarySearchTree() {
         this(null);
     }
@@ -19,13 +18,12 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
         this.comparator = comparator;
     }
 
-    public static void main(String[] args) {
-    }
 
     public void add(E element) {
         elementNotNullCheck(element);
         if (root == null) {
-            root = new BinaryNode<>(element, null);
+            root = createNode(element, null);
+            afterAdd(root);
         } else {
             BinaryNode<E> parent = null;
             BinaryNode<E> cur = root;
@@ -44,7 +42,7 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
                 }
             }
 
-            BinaryNode<E> newNode = new BinaryNode<>(element, parent);
+            BinaryNode<E> newNode = createNode(element, parent);
             if (compareResult < 0) {
                 parent.left = newNode;
             } else if (compareResult > 0) {
@@ -52,10 +50,15 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
             } else {
                 System.out.println("已存在该值");
             }
+            afterAdd(newNode);
         }
         ++size;
+
     }
 
+    protected void afterAdd(BinaryNode<E> node) {
+
+    }
 
     private int compare(E o1, E o2) {
         if (comparator == null) {
@@ -65,13 +68,15 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
         }
     }
 
+    protected BinaryNode<E> createNode(E element, BinaryNode<E> parent) {
+        return new BinaryNode<>(element, parent);
+    }
 
     private void elementNotNullCheck(E element) {
         if (element == null) {
             throw new IllegalArgumentException("Element should not be null");
         }
     }
-
 
     protected BinaryNode<E> node(E element) {
         BinaryNode<E> cur = root;
@@ -88,7 +93,6 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
 
         return null;
     }
-
 
     /**
      * 获取指定节点的前驱结点
@@ -116,12 +120,6 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
 
 
         return node.parent;
-    }
-
-
-    @Override
-    protected void remove(E element) {
-        remove(node(element));
     }
 
     private void remove(BinaryNode<E> node) {
@@ -188,6 +186,11 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
             throw new RuntimeException("本条件分支不应该被执行");
         }
         --size;
+    }
+
+    @Override
+    protected void remove(E element) {
+        remove(node(element));
     }
 
     /**

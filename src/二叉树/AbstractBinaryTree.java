@@ -113,7 +113,7 @@ public abstract class AbstractBinaryTree<E> implements BinaryTreeInfo<BinaryNode
             }
 
             if (node.left != null) {
-                queue.offer(node.left);
+                queue.offer(node.right);
             } else if (node.right != null) {
                 return false;
             }
@@ -151,7 +151,7 @@ public abstract class AbstractBinaryTree<E> implements BinaryTreeInfo<BinaryNode
             BinaryNode<E> node = queue.poll();
             visitor.visit(node.element);
             if (node.left != null) {
-                queue.offer(node.left);
+                queue.offer(node.right);
             }
 
             if (node.right != null) {
