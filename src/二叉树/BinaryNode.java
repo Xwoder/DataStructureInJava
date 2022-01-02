@@ -36,4 +36,22 @@ public class BinaryNode<E> {
         return "Node(" + element + ')';
     }
 
+    /**
+     * 是否父节点的左子树
+     *
+     * @return 是否父节点的左子树
+     */
+    public boolean isLeftChild() {
+        return this.parent != null && this.parent.left == this;
+    }
+
+    /**
+     * 是否父节点的右子树
+     *
+     * @return 是否父节点的右子树
+     */
+    public boolean isRightChild() {
+        return this.parent != null && this.parent.right == this;
+    }
+
 }

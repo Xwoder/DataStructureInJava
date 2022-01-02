@@ -137,23 +137,6 @@ public class AVLTree1<E> extends MyBinarySearchTree<E> {
         }
 
 
-        /**
-         * 是否父节点的左子树
-         *
-         * @return 是否父节点的左子树
-         */
-        public boolean isLeftChild() {
-            return this.parent != null && this.parent.left == this;
-        }
-
-        /**
-         * 是否父节点的右子树
-         *
-         * @return 是否父节点的右子树
-         */
-        public boolean isRightChild() {
-            return this.parent != null && this.parent.right == this;
-        }
 
         public AVLTreeNode<E> tallerChild() {
             int leftHeight = (left == null) ? 0 : ((AVLTreeNode<E>) left).height;
