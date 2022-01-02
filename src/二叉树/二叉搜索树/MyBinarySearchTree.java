@@ -60,6 +60,15 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
 
     }
 
+    /**
+     * 在节点删除后，调整AVL树，使其再平衡
+     *
+     * @param node 被删除的节点
+     */
+    protected void afterRemove(BinaryNode<E> node) {
+
+    }
+
     private int compare(E o1, E o2) {
         if (comparator == null) {
             return ((Comparable) o1).compareTo(o2);
@@ -98,7 +107,6 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
      * 获取指定节点的前驱结点
      *
      * @param node 指定节点
-     *
      * @return 前驱节点
      */
     protected BinaryNode<E> predecessor(BinaryNode<E> node) {
@@ -139,6 +147,8 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
                 // 该分支中的代码不可能被执行
                 return;
             }
+
+            afterRemove(node);
         } else if (node.left == null || node.right == null) {
             /*
              * 仅有一个子节点
@@ -178,6 +188,8 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
                 }
             }
 
+            afterRemove(node);
+
         } else if (node.hasTwoChildren()) {
             BinaryNode<E> s = successor(node);
             node.element = s.element;
@@ -185,11 +197,13 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
         } else {
             throw new RuntimeException("本条件分支不应该被执行");
         }
+
+        afterRemove(node);
         --size;
     }
 
     @Override
-    protected void remove(E element) {
+    public void remove(E element) {
         remove(node(element));
     }
 
@@ -197,7 +211,6 @@ public class MyBinarySearchTree<E> extends AbstractBinaryTree<E> {
      * 获取指定节点的后继结点
      *
      * @param node 指定节点
-     *
      * @return 后继节点
      */
     protected BinaryNode<E> successor(BinaryNode<E> node) {

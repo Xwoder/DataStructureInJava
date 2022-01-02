@@ -1,18 +1,17 @@
 package 二叉树.二叉搜索树.AVL树;
 
-import Tools.printer.BinaryTrees;
 import 二叉树.BinaryNode;
 import 二叉树.二叉搜索树.MyBinarySearchTree;
 
 import java.util.Comparator;
 
-public class AVLTree<E> extends MyBinarySearchTree<E> {
+public class AVLTree1<E> extends MyBinarySearchTree<E> {
 
-    public AVLTree(Comparator<E> comparator) {
+    public AVLTree1(Comparator<E> comparator) {
         super(comparator);
     }
 
-    public AVLTree() {
+    public AVLTree1() {
         super(null);
     }
 
