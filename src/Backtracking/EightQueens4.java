@@ -2,18 +2,18 @@ package Backtracking;
 
 public class EightQueens4 {
 
-    private int numberOfQueens;
+    private final int numberOfQueens;
 
-    private int[] queens;
+    private final int[] queens;
 
     /* 列是否被占用 */
-    private boolean colsOccupied[];
+    private final boolean[] colsOccupied;
 
     /* 自左向右的对角线是否被占用 */
-    private boolean leftTopOccupied[];
+    private final boolean[] leftTopOccupied;
 
     /* 自右向左的对角线是否被占用 */
-    private boolean rightTopOccupied[];
+    private final boolean[] rightTopOccupied;
 
     public EightQueens4(int numberOfQueens) {
         this.numberOfQueens = numberOfQueens;
