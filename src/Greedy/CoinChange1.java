@@ -1,9 +1,8 @@
 package Greedy;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
-public class CoinChange {
+public class CoinChange1 {
 
     public static void main(String[] args) {
         Integer[] coinsFaceValue = new Integer[]{25, 5, 10, 1};
