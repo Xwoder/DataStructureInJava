@@ -1,5 +1,10 @@
 package Greedy;
 
+/**
+ * LeetCode:
+ * 322
+ * https://leetcode.com/problems/coin-change/
+ */
 public class CoinChange7 {
     public static void main(String[] args) {
 
