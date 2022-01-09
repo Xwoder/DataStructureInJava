@@ -1,4 +1,4 @@
-package Greedy;
+package Greedy.CoinChange;
 
 import java.util.Arrays;
 

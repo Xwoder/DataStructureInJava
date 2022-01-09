@@ -1,4 +1,4 @@
-package Greedy;
+package Greedy.CoinChange;
 
 /**
  * LeetCode:
@@ -22,7 +22,6 @@ public class CoinChange7 {
         }
 
         int[] dp = new int[amount + 1];
-        int[] faces = new int[dp.length];
 
         for (int i = 1; i <= amount; i++) {
             int min = Integer.MAX_VALUE;
@@ -37,7 +36,6 @@ public class CoinChange7 {
                 }
 
                 min = Math.min(min, numberOfCoinsNeededForPrevPick);
-                faces[i] = coin;
             }
 
             dp[i] = (min == Integer.MAX_VALUE) ? -1 : min + 1;
