@@ -9,11 +9,18 @@ public class LongestCommonSequence1 {
 
         System.out.println(lcs.lcs(
                 new int[]{1, 3, 5, 9, 10},
-                new int[]{1, 4, 9, 19}));
+                new int[]{1, 4, 9, 19})
+        );
 
         System.out.println(lcs.lcs(
                 new int[]{1, 4, 5, 9, 10},
-                new int[]{1, 4, 9, 10}));
+                new int[]{1, 4, 9, 10})
+        );
+
+        System.out.println(lcs.lcs(
+                new int[]{1, 3, 5},
+                new int[]{1, 5, 2})
+        );
     }
 
     private int lcs(int[] nums1, int[] nums2) {
@@ -41,7 +48,7 @@ public class LongestCommonSequence1 {
 
             return Math.max(
                     lcs(nums1, i - 1, nums2, j),
-                    lcs(nums1, i , nums2, j - 1));
+                    lcs(nums1, i, nums2, j - 1));
         }
     }
 }
