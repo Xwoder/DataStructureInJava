@@ -1,4 +1,4 @@
-package Greedy.LongestIncreasingSubsequence;
+package DynamicProgramming.LongestIncreasingSubsequence;
 
 import Tools.tools.Asserts;
 
