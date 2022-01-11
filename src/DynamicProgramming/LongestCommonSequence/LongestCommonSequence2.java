@@ -1,8 +1,5 @@
 package DynamicProgramming.LongestCommonSequence;
 
-/**
- * Longest Common Sequence 递归实现
- */
 public class LongestCommonSequence2 {
     public static void main(String[] args) {
         LongestCommonSequence2 lcs = new LongestCommonSequence2();
