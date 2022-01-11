@@ -1,23 +1,16 @@
 package DynamicProgramming.LongestCommonSequence;
 
+import Tools.tools.Asserts;
+
 public class LongestCommonSequence4 {
     public static void main(String[] args) {
         LongestCommonSequence4 lcs = new LongestCommonSequence4();
 
-        System.out.println(lcs.lcs(
-                new int[]{1, 3, 5, 9, 10},
-                new int[]{1, 4, 9, 19})
-        );
+        Asserts.test(lcs.lcs(new int[]{1, 3, 5, 9, 10}, new int[]{1, 4, 9, 19}) == 2);
 
-        System.out.println(lcs.lcs(
-                new int[]{1, 4, 5, 9, 10},
-                new int[]{1, 4, 9, 10})
-        );
+        Asserts.test(lcs.lcs(new int[]{1, 4, 5, 9, 10}, new int[]{1, 4, 9, 10}) == 4);
 
-        System.out.println(lcs.lcs(
-                new int[]{1, 3, 5},
-                new int[]{1, 5, 2})
-        );
+        Asserts.test(lcs.lcs(new int[]{1, 3, 5}, new int[]{1, 5, 2}) == 2);
 
     }
 
