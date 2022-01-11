@@ -30,21 +30,23 @@ public class LongestCommonSequence4 {
         /*
          * dp[i][j]值为数组 num1 前 i 个元素与数组 nums2 前 j 个元素的最大公共子序列长度
          */
-        int[][] dp = new int[2][nums2.length + 1];
+        int[] dp = new int[nums2.length + 1];
 
+        int cur = 0;
         for (int i = 1; i <= nums1.length; i++) {
-            int row = i & 1;
-            int prevRow = (i - 1) & 1;
+            cur = 0;
             for (int j = 1; j <= nums2.length; j++) {
+                int leftTop = cur;
+                cur = dp[j];
                 if (nums1[i - 1] == nums2[j - 1]) {
-                    dp[row][j] = dp[prevRow][j - 1] + 1;
+                    dp[j] = leftTop + 1;
                 } else {
-                    dp[row][j] = Math.max(dp[prevRow][j], dp[row][j - 1]);
+                    dp[j] = Math.max(dp[j], dp[j - 1]);
                 }
             }
         }
 
-        return dp[nums1.length & 1][nums2.length];
+        return dp[nums2.length];
     }
 
 }
