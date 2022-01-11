@@ -23,7 +23,7 @@ public class LongestCommonSequence5 {
             colsNums = nums1;
             rowsNums = nums2;
         }
-        
+
         int[] dp = new int[colsNums.length + 1];
         for (int i = 1; i <= rowsNums.length; i++) {
             int cur = 0;
