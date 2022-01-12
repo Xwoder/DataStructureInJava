@@ -4,13 +4,13 @@ import Tools.tools.Asserts;
 
 public class LongestCommonSequence4 {
     public static void main(String[] args) {
-        LongestCommonSequence4 lcs = new LongestCommonSequence4();
+        LongestCommonSequence4 longestCommonSequence = new LongestCommonSequence4();
 
-        Asserts.test(lcs.lcs(new int[]{1, 3, 5, 9, 10}, new int[]{1, 4, 9, 19}) == 2);
+        Asserts.test(longestCommonSequence.lcs(new int[]{1, 3, 5, 9, 10}, new int[]{1, 4, 9, 19}) == 2);
 
-        Asserts.test(lcs.lcs(new int[]{1, 4, 5, 9, 10}, new int[]{1, 4, 9, 10}) == 4);
+        Asserts.test(longestCommonSequence.lcs(new int[]{1, 4, 5, 9, 10}, new int[]{1, 4, 9, 10}) == 4);
 
-        Asserts.test(lcs.lcs(new int[]{1, 3, 5}, new int[]{1, 5, 2}) == 2);
+        Asserts.test(longestCommonSequence.lcs(new int[]{1, 3, 5}, new int[]{1, 5, 2}) == 2);
 
     }
 
