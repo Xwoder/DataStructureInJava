@@ -1,5 +1,7 @@
 package DynamicProgramming.LongestCommonSubstring;
 
+import java.util.Arrays;
+
 public class LongestCommonSubstring1 {
     public static void main(String[] args) {
         LongestCommonSubstring1 longestCommonSubstring = new LongestCommonSubstring1();
@@ -25,6 +27,12 @@ public class LongestCommonSubstring1 {
 
             }
         }
+
+        System.out.println("[");
+        for (int row = 0; row < dp.length; row++) {
+            System.out.println("    " + Arrays.toString(dp[row]));
+        }
+        System.out.println("]");
 
         return max;
     }
