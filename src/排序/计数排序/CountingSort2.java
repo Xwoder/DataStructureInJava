@@ -21,7 +21,6 @@ public class CountingSort2 {
 
         countingSort.sort(nums);
 
-        Arrays.sort(nums);
         System.out.println(Arrays.toString(nums));
     }
 
