@@ -31,6 +31,7 @@ public class RadixSort {
             }
         }
 
+        // 利用计数排序实现基数排序
         for (int radix = 1; radix <= max; radix *= 10) {
             countingSort(array, radix);
         }
