@@ -13,7 +13,10 @@ public class Knapsack2 {
     }
 
     public int knapsack(int[] values, int[] weights, int maxCapacity) {
-        if (values == null || values.length <= 0 || weights == null || weights.length <= 0 || values.length != weights.length || maxCapacity == 0) {
+        if (values == null || values.length <= 0
+                || weights == null || weights.length <= 0
+                || values.length != weights.length
+                || maxCapacity == 0) {
             return 0;
         }
 
