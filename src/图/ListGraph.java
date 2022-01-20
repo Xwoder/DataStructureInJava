@@ -135,7 +135,11 @@ public class ListGraph<V, E, W> extends Graph<V, E, W> {
     }
 
     @Override
-    public void bfs(V begin) {
+    public void bfs(V begin, VertexVisitor<V> visitor) {
+        if (visitor == null) {
+            return;
+        }
+
         Vertex<V, E, W> beginVertex = this.vertices.get(begin);
         if (beginVertex == null) {
             return;
@@ -151,7 +155,7 @@ public class ListGraph<V, E, W> extends Graph<V, E, W> {
         while (!queue.isEmpty()) {
             Vertex<V, E, W> vertex = queue.poll();
 
-            System.out.println("\t" + vertex);
+            visitor.visit(vertex.value);
 
             for (Edge<V, E, W> outEdge : vertex.outEdges) {
                 final Vertex<V, E, W> toVertex = outEdge.to;
@@ -166,7 +170,11 @@ public class ListGraph<V, E, W> extends Graph<V, E, W> {
     }
 
     @Override
-    public void dfs_recursion(V begin) {
+    public void dfs_recursion(V begin, VertexVisitor<V> visitor) {
+        if (visitor == null) {
+            return;
+        }
+
         Vertex<V, E, W> vertex = this.vertices.get(begin);
         if (vertex == null) {
             return;
@@ -175,12 +183,12 @@ public class ListGraph<V, E, W> extends Graph<V, E, W> {
         Set<Vertex<V, E, W>> visitedVertexSet = new HashSet<>();
 
         System.out.println("DFS: {");
-        dfs_recursion(vertex, visitedVertexSet);
+        dfs_recursion(vertex, visitedVertexSet, visitor);
         System.out.println("}");
     }
 
-    private void dfs_recursion(Vertex<V, E, W> beginVertex, Set<Vertex<V, E, W>> visitedVertexSet) {
-        System.out.println("\t" + beginVertex);
+    private void dfs_recursion(Vertex<V, E, W> beginVertex, Set<Vertex<V, E, W>> visitedVertexSet, VertexVisitor<V> visitor) {
+        visitor.visit(beginVertex.value);
         visitedVertexSet.add(beginVertex);
 
         for (Edge<V, E, W> outEdge : beginVertex.outEdges) {
@@ -188,9 +196,57 @@ public class ListGraph<V, E, W> extends Graph<V, E, W> {
             if (visitedVertexSet.contains(toVertex)) {
                 continue;
             }
-            dfs_recursion(toVertex, visitedVertexSet);
+            dfs_recursion(toVertex, visitedVertexSet, visitor);
         }
     }
+
+    @Override
+    public void dfs_iteration(V begin, VertexVisitor<V> visitor) {
+        if (visitor == null) {
+            return;
+        }
+
+        Vertex<V, E, W> beginVertex = this.vertices.get(begin);
+        if (beginVertex == null) {
+            return;
+        }
+
+        System.out.println("DFS: {");
+
+        Stack<Vertex<V, E, W>> stack = new Stack<>();
+        Set<Vertex<V, E, W>> visitedVertexSet = new HashSet<>();
+
+        visitor.visit(beginVertex.value);
+
+        visitedVertexSet.add(beginVertex);
+        stack.push(beginVertex);
+
+        while (!stack.isEmpty()) {
+            Vertex<V, E, W> fromVertex = stack.pop();
+
+            for (Edge<V, E, W> outEdge : fromVertex.outEdges) {
+                // 从出边集合中取出一条出边
+                Vertex<V, E, W> toVertex = outEdge.to;
+                // 如果这条出边之前已经被遍历过，则跳过，取出下一条出边
+                if (visitedVertexSet.contains(toVertex)) {
+                    continue;
+                }
+
+                // 如果这条出边之前没有被遍历过，则遍历之
+                stack.push(fromVertex);
+                stack.push(toVertex);
+
+                visitor.visit(toVertex.value);
+                visitedVertexSet.add(toVertex);
+
+                // break 语句的作用是确保
+                break;
+            }
+        }
+
+        System.out.println("}");
+    }
+
 
     /* 边类 */
     private static class Edge<V, E, W> {

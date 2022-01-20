@@ -11,8 +11,25 @@ public class ListGraphDemo1 {
         graph.addEdge("V0", "V4", 6);
         System.out.println(graph);
 
-        graph.bfs("V1");
+        graph.bfs("V1", new Graph.VertexVisitor<String>() {
+            @Override
+            public void visit(String value) {
+                System.out.println("\t" + value);
+            }
+        });
 
-        graph.dfs_recursion("V1");
+        graph.dfs_recursion("V1", new Graph.VertexVisitor<String>() {
+            @Override
+            public void visit(String value) {
+                System.out.println("\t" + value);
+            }
+        });
+
+        graph.dfs_iteration("V1", new Graph.VertexVisitor<String>() {
+            @Override
+            public void visit(String value) {
+                System.out.println("\t" + value);
+            }
+        });
     }
 }

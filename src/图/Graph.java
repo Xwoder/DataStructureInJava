@@ -59,7 +59,7 @@ public abstract class Graph<V, E, W> {
      *
      * @param begin 起始结点
      */
-    abstract void bfs(V begin);
+    abstract void bfs(V begin, VertexVisitor<V> visitor);
 
     /**
      * 深度优先搜索
@@ -68,7 +68,16 @@ public abstract class Graph<V, E, W> {
      *
      * @param begin 起始结点
      */
-    abstract void dfs_recursion(V begin);
+    abstract void dfs_recursion(V begin, VertexVisitor<V> visitor);
+
+    /**
+     * 深度优先搜索
+     * <p>
+     * 非递归实现，迭代实现
+     *
+     * @param begin 起始结点
+     */
+    abstract void dfs_iteration(V begin, VertexVisitor<V> visitor);
 
     public interface WeightManager<E> {
         int compare(E w1, E w2);
@@ -76,6 +85,10 @@ public abstract class Graph<V, E, W> {
         E add(E w1, E w2);
 
         E zero();
+    }
+
+    public interface VertexVisitor<V> {
+        public void visit(V value);
     }
 
 
