@@ -12,5 +12,7 @@ public class ListGraphDemo1 {
         System.out.println(graph);
 
         graph.bfs("V1");
+
+        graph.dfs_recursion("V1");
     }
 }

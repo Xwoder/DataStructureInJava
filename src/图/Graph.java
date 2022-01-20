@@ -61,6 +61,15 @@ public abstract class Graph<V, E, W> {
      */
     abstract void bfs(V begin);
 
+    /**
+     * 深度优先搜索
+     * <p>
+     * 递归实现
+     *
+     * @param begin 起始结点
+     */
+    abstract void dfs_recursion(V begin);
+
     public interface WeightManager<E> {
         int compare(E w1, E w2);
 

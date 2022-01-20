@@ -165,6 +165,32 @@ public class ListGraph<V, E, W> extends Graph<V, E, W> {
         System.out.println("}");
     }
 
+    @Override
+    public void dfs_recursion(V begin) {
+        Vertex<V, E, W> vertex = this.vertices.get(begin);
+        if (vertex == null) {
+            return;
+        }
+
+        Set<Vertex<V, E, W>> visitedVertexSet = new HashSet<>();
+
+        System.out.println("DFS: {");
+        dfs_recursion(vertex, visitedVertexSet);
+        System.out.println("}");
+    }
+
+    private void dfs_recursion(Vertex<V, E, W> beginVertex, Set<Vertex<V, E, W>> visitedVertexSet) {
+        System.out.println("\t" + beginVertex);
+        visitedVertexSet.add(beginVertex);
+
+        for (Edge<V, E, W> outEdge : beginVertex.outEdges) {
+            Vertex<V, E, W> toVertex = outEdge.to;
+            if (visitedVertexSet.contains(toVertex)) {
+                continue;
+            }
+            dfs_recursion(toVertex, visitedVertexSet);
+        }
+    }
 
     /* 边类 */
     private static class Edge<V, E, W> {
