@@ -31,6 +31,14 @@ public interface Graph<V, E, W> {
     void addEdge(V from, V to, W weight);
 
     /**
+     * 添加边
+     *
+     * @param from 起点
+     * @param to   终点
+     */
+    void addEdge(V from, V to);
+
+    /**
      * 删除边
      *
      * @param from 起点
