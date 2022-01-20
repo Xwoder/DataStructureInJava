@@ -1,25 +1,33 @@
 package 图;
 
-public interface Graph<V, E, W> {
+public abstract class Graph<V, E, W> {
 
-    int edgesSize();
+    protected WeightManager<E> weightManager;
 
-    int verticesSize();
+    public Graph() {
+    }
+
+    public Graph(WeightManager<E> weightManager) {
+        this.weightManager = weightManager;
+    }
+
+    abstract int edgesSize();
+
+    abstract int verticesSize();
 
     /**
      * 添加顶点
      *
      * @param v 顶点的值
      */
-    void addVertex(V v);
+    abstract void addVertex(V v);
 
     /**
      * 删除顶点
      *
      * @param v 顶点
      */
-    void removeVertex(V v);
-
+    abstract void removeVertex(V v);
 
     /**
      * 添加边
@@ -28,7 +36,7 @@ public interface Graph<V, E, W> {
      * @param to     终点
      * @param weight 权值
      */
-    void addEdge(V from, V to, W weight);
+    abstract void addEdge(V from, V to, W weight);
 
     /**
      * 添加边
@@ -36,7 +44,7 @@ public interface Graph<V, E, W> {
      * @param from 起点
      * @param to   终点
      */
-    void addEdge(V from, V to);
+    abstract void addEdge(V from, V to);
 
     /**
      * 删除边
@@ -44,7 +52,22 @@ public interface Graph<V, E, W> {
      * @param from 起点
      * @param to   终点
      */
-    void removeEdge(V from, V to);
+    abstract void removeEdge(V from, V to);
+
+    /**
+     * 广度优先搜索
+     *
+     * @param begin 起始结点
+     */
+    abstract void bfs(V begin);
+
+    public interface WeightManager<E> {
+        int compare(E w1, E w2);
+
+        E add(E w1, E w2);
+
+        E zero();
+    }
 
 
 }

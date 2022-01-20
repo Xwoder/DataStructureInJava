@@ -3,32 +3,20 @@ package 图;
 import java.util.*;
 import java.util.function.BiConsumer;
 
-public class ListGraph<V, E, W> implements Graph<V, E, W> {
+public class ListGraph<V, E, W> extends Graph<V, E, W> {
 
     private Map<V, Vertex<V, E, W>> vertices;
     private Set<Edge<V, E, W>> edges;
 
-    public ListGraph() {
+    public ListGraph(WeightManager<E> weightManager) {
+        super(weightManager);
         this.vertices = new HashMap<>();
         this.edges = new HashSet<>();
     }
 
-    public static void main(String[] args) {
-        Graph<String, Integer, Integer> graph = new ListGraph<>();
-        graph.addEdge("V1", "V0", 9);
-        graph.addEdge("V1", "V2", 3);
-        graph.addEdge("V2", "V0", 2);
-        graph.addEdge("V2", "V3", 5);
-        graph.addEdge("V3", "V4", 1);
-        graph.addEdge("V0", "V4", 6);
-        System.out.println(graph);
-
-        graph.removeEdge("V0", "V4");
-        System.out.println(graph);
-
-        graph.removeVertex("V0");
-        System.out.println(graph);
-
+    public ListGraph() {
+        this.vertices = new HashMap<>();
+        this.edges = new HashSet<>();
     }
 
     @Override
@@ -38,13 +26,12 @@ public class ListGraph<V, E, W> implements Graph<V, E, W> {
         vertices.forEach(new BiConsumer<V, Vertex<V, E, W>>() {
             @Override
             public void accept(V v, Vertex<V, E, W> vertex) {
-                sb.append("    ").append(vertex).append("\n");
+                sb.append("\t").append(vertex).append("\n");
             }
         });
         sb.append("}");
 
         return sb.toString();
-
     }
 
     @Override
@@ -123,6 +110,7 @@ public class ListGraph<V, E, W> implements Graph<V, E, W> {
         this.edges.add(edge);
     }
 
+    @Override
     public void addEdge(V from, V to) {
         addEdge(from, to, null);
     }
@@ -144,6 +132,37 @@ public class ListGraph<V, E, W> implements Graph<V, E, W> {
             fromVertex.outEdges.remove(edge);
             toVertex.inEdges.remove(edge);
         }
+    }
+
+    @Override
+    public void bfs(V begin) {
+        Vertex<V, E, W> beginVertex = this.vertices.get(begin);
+        if (beginVertex == null) {
+            return;
+        }
+        System.out.println("BFS: {");
+
+        Set<Vertex<V, E, W>> visitedVertexSet = new HashSet<>();
+
+        Queue<Vertex<V, E, W>> queue = new LinkedList<>();
+        queue.add(beginVertex);
+        visitedVertexSet.add(beginVertex);
+
+        while (!queue.isEmpty()) {
+            Vertex<V, E, W> vertex = queue.poll();
+
+            System.out.println("\t" + vertex);
+
+            for (Edge<V, E, W> outEdge : vertex.outEdges) {
+                final Vertex<V, E, W> toVertex = outEdge.to;
+                if (visitedVertexSet.contains(toVertex)) {
+                    continue;
+                }
+                queue.add(toVertex);
+                visitedVertexSet.add(toVertex);
+            }
+        }
+        System.out.println("}");
     }
 
 
@@ -184,12 +203,9 @@ public class ListGraph<V, E, W> implements Graph<V, E, W> {
 
     /* 顶点类 */
     private static class Vertex<V, E, W> {
-        /* 值 */
-        V value;
-        /* 出边 */
-        Set<Edge<V, E, W>> inEdges = new HashSet<>();
-        /* 入边 */
-        Set<Edge<V, E, W>> outEdges = new HashSet<>();
+        /* 值 */ V value;
+        /* 出边 */ Set<Edge<V, E, W>> inEdges = new HashSet<>();
+        /* 入边 */ Set<Edge<V, E, W>> outEdges = new HashSet<>();
 
         public Vertex(V value) {
             this.value = value;
