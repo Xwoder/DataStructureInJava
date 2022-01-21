@@ -8,7 +8,7 @@ public class ListGraph<V, E, W> extends Graph<V, E, W> {
     private Map<V, Vertex<V, E, W>> vertices;
     private Set<Edge<V, E, W>> edges;
 
-    public ListGraph(WeightManager<E> weightManager) {
+    public ListGraph(WeightManager<W> weightManager) {
         super(weightManager);
         this.vertices = new HashMap<>();
         this.edges = new HashSet<>();
@@ -243,6 +243,11 @@ public class ListGraph<V, E, W> extends Graph<V, E, W> {
         }
 
         System.out.println("}");
+    }
+
+    @Override
+    Set<Graph<V, E, W>.EdgeInfo<V, W>> minimumSpanningTree() {
+        return null;
     }
 
     @Override

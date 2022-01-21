@@ -1,15 +1,16 @@
 package 图;
 
 import java.util.List;
+import java.util.Set;
 
 public abstract class Graph<V, E, W> {
 
-    protected WeightManager<E> weightManager;
+    protected WeightManager<W> weightManager;
 
     public Graph() {
     }
 
-    public Graph(WeightManager<E> weightManager) {
+    public Graph(WeightManager<W> weightManager) {
         this.weightManager = weightManager;
     }
 
@@ -81,18 +82,35 @@ public abstract class Graph<V, E, W> {
      */
     abstract void dfs_iteration(V begin, VertexVisitor<V> visitor);
 
+    /**
+     * 最小生成树
+     */
+    abstract Set<EdgeInfo<V, W>> minimumSpanningTree();
+
     abstract List<V> topologicalSorting();
 
-    public interface WeightManager<E> {
-        int compare(E w1, E w2);
+    public interface WeightManager<W> {
+        int compare(W w1, W w2);
 
-        E add(E w1, E w2);
+        W add(W w1, W w2);
 
-        E zero();
+        W zero();
     }
 
     public interface VertexVisitor<V> {
-        public void visit(V value);
+        void visit(V value);
+    }
+
+    class EdgeInfo<V, W> {
+        V from;
+        V to;
+        W weight;
+
+        public EdgeInfo(V from, V to, W weight) {
+            this.from = from;
+            this.to = to;
+            this.weight = weight;
+        }
     }
 
 
