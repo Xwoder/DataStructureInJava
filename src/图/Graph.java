@@ -3,7 +3,7 @@ package 图;
 import java.util.List;
 import java.util.Set;
 
-public abstract class Graph<V, E, W> {
+public abstract class Graph<V, W> {
 
     protected WeightManager<W> weightManager;
 

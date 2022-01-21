@@ -19,8 +19,8 @@ public class GraphDataTools {
     /**
      * 有向图
      */
-    public static Graph<Object, Double, Double> directedGraph(Object[][] data) {
-        Graph<Object, Double, Double> graph = new ListGraph<>(weightManager);
+    public static Graph<Object, Double> directedGraph(Object[][] data) {
+        Graph<Object, Double> graph = new ListGraph<>(weightManager);
         for (Object[] edge : data) {
             if (edge.length == 1) {
                 graph.addVertex(edge[0]);
@@ -39,8 +39,8 @@ public class GraphDataTools {
      * @param data
      * @return
      */
-    public static Graph<Object, Double, Double> undirectedGraph(Object[][] data) {
-        Graph<Object, Double, Double> graph = new ListGraph<>(weightManager);
+    public static Graph<Object, Double> undirectedGraph(Object[][] data) {
+        Graph<Object, Double> graph = new ListGraph<>(weightManager);
         for (Object[] edge : data) {
             if (edge.length == 1) {
                 graph.addVertex(edge[0]);
