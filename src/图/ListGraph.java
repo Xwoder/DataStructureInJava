@@ -81,8 +81,6 @@ public class ListGraph<V, E, W> extends Graph<V, E, W> {
             iterator.remove();
             edges.remove(edge);
         }
-
-
     }
 
     @Override
@@ -245,6 +243,42 @@ public class ListGraph<V, E, W> extends Graph<V, E, W> {
         }
 
         System.out.println("}");
+    }
+
+    @Override
+    public List<V> topologicalSorting() {
+        List<V> list = new ArrayList<>(verticesSize());
+        Queue<Vertex<V, E, W>> queue = new LinkedList<>();
+        Map<Vertex<V, E, W>, Integer> inDegreeMap = new HashMap<>();
+
+        this.vertices.forEach(new BiConsumer<V, Vertex<V, E, W>>() {
+            @Override
+            public void accept(V v, Vertex<V, E, W> vertex) {
+                final int inDegree = vertex.inEdges.size();
+                if (inDegree == 0) {
+                    queue.add(vertex);
+                } else {
+                    inDegreeMap.put(vertex, inDegree);
+                }
+            }
+        });
+
+        while (!queue.isEmpty()) {
+            Vertex<V, E, W> zeroInDegreeVertex = queue.poll();
+            list.add(zeroInDegreeVertex.value);
+
+            for (Edge<V, E, W> outEdge : zeroInDegreeVertex.outEdges) {
+                Vertex<V, E, W> outVertex = outEdge.to;
+                Integer inDegreeOfOutVertex = inDegreeMap.get(outVertex);
+                if (inDegreeOfOutVertex == 1) {
+                    queue.add(outVertex);
+                } else {
+                    inDegreeMap.replace(outVertex, inDegreeOfOutVertex - 1);
+                }
+                inDegreeMap.replace(outVertex, inDegreeMap.get(outVertex));
+            }
+        }
+        return list;
     }
 
 

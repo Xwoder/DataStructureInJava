@@ -1,5 +1,7 @@
 package 图;
 
+import java.util.List;
+
 public abstract class Graph<V, E, W> {
 
     protected WeightManager<E> weightManager;
@@ -78,6 +80,8 @@ public abstract class Graph<V, E, W> {
      * @param begin 起始结点
      */
     abstract void dfs_iteration(V begin, VertexVisitor<V> visitor);
+
+    abstract List<V> topologicalSorting();
 
     public interface WeightManager<E> {
         int compare(E w1, E w2);
