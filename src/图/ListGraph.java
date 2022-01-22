@@ -1,9 +1,12 @@
 package 图;
 
+import 顺序存储二叉堆.MyBinaryHeap;
+import 顺序存储二叉堆.MyHeap;
+
 import java.util.*;
 import java.util.function.BiConsumer;
 
-public class ListGraph<V, W> extends Graph<V, W> {
+public class ListGraph<V, W extends Comparable<W>> extends Graph<V, W> {
 
     private Map<V, Vertex<V, W>> vertices;
     private Set<Edge<V, W>> edges;
@@ -246,9 +249,48 @@ public class ListGraph<V, W> extends Graph<V, W> {
     }
 
     @Override
-    Set<Graph<V, W>.EdgeInfo<V, W>> minimumSpanningTree() {
-        return null;
+    public Set<EdgeInfo<V, W>> minimumSpanningTree() {
+        if (vertices.size() == 0) {
+            return null;
+        }
+
+        return minimumSpanningTreeOnPrim();
     }
+
+    public Set<EdgeInfo<V, W>> minimumSpanningTreeOnPrim() {
+        if (vertices.size() == 0) {
+            return null;
+        }
+
+        Set<EdgeInfo<V, W>> edgeInfos = new HashSet<>();
+        Set<Vertex<V, W>> verticesAdded = new HashSet<>();
+        Vertex<V, W> vertex = vertices.values().iterator().next();
+
+        verticesAdded.add(vertex);
+
+        MyHeap<Edge<V, W>> heap = new MyBinaryHeap<>(
+                vertex.outEdges,
+                new Comparator<Edge<V, W>>() {
+                    @Override
+                    public int compare(Edge<V, W> o1, Edge<V, W> o2) {
+                        return o2.compareTo(o1);
+                    }
+                });
+
+        while (!heap.isEmpty() && verticesAdded.size() < verticesSize()) {
+            Edge<V, W> edge = heap.remove();
+            if (verticesAdded.contains(edge.to)) {
+                continue;
+            }
+
+            edgeInfos.add(edge.info());
+            verticesAdded.add(edge.to);
+            heap.addAll(edge.to.outEdges);
+        }
+
+        return edgeInfos;
+    }
+
 
     @Override
     public List<V> topologicalSorting() {
@@ -288,7 +330,7 @@ public class ListGraph<V, W> extends Graph<V, W> {
 
 
     /* 边类 */
-    private static class Edge<V, W> {
+    private static class Edge<V, W extends Comparable<W>> implements Comparable<Edge<V, W>> {
         W weight;
         private Vertex<V, W> from;
         private Vertex<V, W> to;
@@ -304,6 +346,10 @@ public class ListGraph<V, W> extends Graph<V, W> {
             this.to = to;
         }
 
+        EdgeInfo<V, W> info() {
+            return new EdgeInfo<V, W>(from.value, to.value, weight);
+        }
+
         @Override
         public boolean equals(Object o) {
             if (this == o) {
@@ -312,7 +358,7 @@ public class ListGraph<V, W> extends Graph<V, W> {
             if (o == null || getClass() != o.getClass()) {
                 return false;
             }
-            Edge<?, ?> edge = (Edge<?,  ?>) o;
+            Edge<?, ?> edge = (Edge<?, ?>) o;
             return from.equals(edge.from) && to.equals(edge.to);
         }
 
@@ -320,10 +366,15 @@ public class ListGraph<V, W> extends Graph<V, W> {
         public int hashCode() {
             return Objects.hash(from, to);
         }
+
+        @Override
+        public int compareTo(Edge<V, W> o) {
+            return this.weight.compareTo(o.weight);
+        }
     }
 
     /* 顶点类 */
-    private static class Vertex<V, W> {
+    private static class Vertex<V, W extends Comparable<W>> {
         /* 值 */ V value;
         /* 出边 */ Set<Edge<V, W>> inEdges = new HashSet<>();
         /* 入边 */ Set<Edge<V, W>> outEdges = new HashSet<>();
@@ -331,6 +382,7 @@ public class ListGraph<V, W> extends Graph<V, W> {
         public Vertex(V value) {
             this.value = value;
         }
+
 
         @Override
         public String toString() {

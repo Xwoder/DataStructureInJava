@@ -3,6 +3,8 @@ package 顺序存储二叉堆;
 import Tools.printer.BinaryTreeInfo;
 import Tools.printer.BinaryTrees;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 
 public class MyBinaryHeap<E> extends MyAbstractHeap<E> implements BinaryTreeInfo<Integer> {
@@ -10,17 +12,18 @@ public class MyBinaryHeap<E> extends MyAbstractHeap<E> implements BinaryTreeInfo
     private static final int DEFAULT_CAPACITY = 10;
     private E[] elements;
 
-    public MyBinaryHeap(E[] elements, Comparator<E> comparator) {
+    public MyBinaryHeap(Collection<E> elements, Comparator<E> comparator) {
         super(comparator);
-        if (elements == null || elements.length == 0) {
+        if (elements == null || elements.size() == 0) {
             this.elements = (E[]) new Object[DEFAULT_CAPACITY];
         } else {
-            final int capacity = Math.max(DEFAULT_CAPACITY, elements.length);
+            final int capacity = Math.max(DEFAULT_CAPACITY, elements.size());
             this.elements = (E[]) new Object[capacity];
 
-            size = elements.length;
-            for (int i = 0; i < size; i++) {
-                this.elements[i] = elements[i];
+            size = elements.size();
+            E[] elementArray = (E[]) elements.toArray();
+            for (int i = 0; i < elements.size(); i++) {
+                this.elements[i] = elementArray[i];
             }
 
             heapifyFromTopToDown();
@@ -28,15 +31,19 @@ public class MyBinaryHeap<E> extends MyAbstractHeap<E> implements BinaryTreeInfo
     }
 
     public MyBinaryHeap(Comparator<E> comparator) {
-        this(null, comparator);
+        this((Collection<E>) null, comparator);
     }
 
     public MyBinaryHeap() {
-        this(null, null);
+        this((Collection<E>) null, null);
     }
 
-    public MyBinaryHeap(E[] elements) {
+    public MyBinaryHeap(Collection<E> elements) {
         this(elements, null);
+    }
+
+    public MyBinaryHeap(E[] array, Comparator<E> comparator) {
+        this(Arrays.asList(array), comparator);
     }
 
     public static void main(String[] args) {
@@ -44,7 +51,7 @@ public class MyBinaryHeap<E> extends MyAbstractHeap<E> implements BinaryTreeInfo
 
         /* 大根堆 */
         {
-            MyBinaryHeap<Integer> maxHeap = new MyBinaryHeap<>(array, new Comparator<Integer>() {
+            MyBinaryHeap<Integer> maxHeap = new MyBinaryHeap<Integer>(array, new Comparator<Integer>() {
                 @Override
                 public int compare(Integer o1, Integer o2) {
                     return o1 - o2;
@@ -55,7 +62,7 @@ public class MyBinaryHeap<E> extends MyAbstractHeap<E> implements BinaryTreeInfo
 
         /* 小根堆 */
         {
-            MyBinaryHeap<Integer> minHeap = new MyBinaryHeap<>(array, new Comparator<Integer>() {
+            MyBinaryHeap<Integer> minHeap = new MyBinaryHeap<Integer>(array, new Comparator<Integer>() {
                 @Override
                 public int compare(Integer o1, Integer o2) {
                     return o2 - o1;
@@ -75,6 +82,28 @@ public class MyBinaryHeap<E> extends MyAbstractHeap<E> implements BinaryTreeInfo
         ++size;
         siftUp2(size - 1);
 
+    }
+
+    @Override
+    public void addAll(E[] element) {
+        if (element == null || elements.length <= 0) {
+            return;
+        }
+
+        for (E e : elements) {
+            add(e);
+        }
+    }
+
+    @Override
+    public void addAll(Collection<E> elements) {
+        if (elements == null) {
+            return;
+        }
+
+        for (E element : elements) {
+            add(element);
+        }
     }
 
     @Override

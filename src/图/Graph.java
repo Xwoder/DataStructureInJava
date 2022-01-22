@@ -101,17 +101,36 @@ public abstract class Graph<V, W> {
         void visit(V value);
     }
 
-    class EdgeInfo<V, W> {
-        V from;
-        V to;
-        W weight;
+    public static class EdgeInfo<V, W> {
+        private V from;
+        private V to;
+        private W weight;
 
         public EdgeInfo(V from, V to, W weight) {
             this.from = from;
             this.to = to;
             this.weight = weight;
         }
+
+        public V getFrom() {
+            return from;
+        }
+
+        public V getTo() {
+            return to;
+        }
+
+        public W getWeight() {
+            return weight;
+        }
+
+        @Override
+        public String toString() {
+            return "EdgeInfo{" +
+                    "from=" + from +
+                    ", to=" + to +
+                    ", weight=" + weight +
+                    '}';
+        }
     }
-
-
 }
