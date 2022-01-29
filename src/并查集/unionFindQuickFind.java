@@ -54,6 +54,4 @@ public class unionFindQuickFind extends UnionFind {
 
         return parents[v];
     }
-
-
 }
