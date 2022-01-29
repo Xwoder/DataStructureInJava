@@ -2,6 +2,9 @@ package 并查集;
 
 import Tools.tools.Asserts;
 
+/**
+ * 并查集，基于 Quick Find 的实现
+ */
 public class UnionFind_QuickFind extends UnionFind {
 
     public UnionFind_QuickFind(int capacity) {
