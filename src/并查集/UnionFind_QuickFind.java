@@ -1,5 +1,7 @@
 package 并查集;
 
+import Tools.tools.Asserts;
+
 public class UnionFind_QuickFind extends UnionFind {
 
     public UnionFind_QuickFind(int capacity) {
@@ -18,25 +20,27 @@ public class UnionFind_QuickFind extends UnionFind {
         quickFindUnionFind.union(9, 10);
         quickFindUnionFind.union(9, 11);
 
-        System.out.println(quickFindUnionFind.isSame(0, 6));
-        System.out.println(quickFindUnionFind.isSame(0, 5));
+        Asserts.test(quickFindUnionFind.isSame(0, 6) == false);
+        Asserts.test(quickFindUnionFind.isSame(0, 5) == true);
 
         quickFindUnionFind.union(4, 6);
-        System.out.println(quickFindUnionFind.isSame(1, 7));
-        System.out.println(quickFindUnionFind.isSame(2, 7));
-
+        Asserts.test(quickFindUnionFind.isSame(1, 7) == true);
+        Asserts.test(quickFindUnionFind.isSame(2, 7) == true);
     }
 
     public void union(int v1, int v2) {
-        int p1 = find(v1);
-        int p2 = find(v2);
-        if (p1 == p2) {
+        /* v1 的根节点 r1 */
+        int r1 = find(v1);
+        /* v2 的根节点 r2 */
+        int r2 = find(v2);
+        
+        if (r1 == r2) {
             return;
         }
 
         for (int i = 0; i < parents.length; i++) {
-            if (parents[i] == p1) {
-                parents[i] = p2;
+            if (parents[i] == r1) {
+                parents[i] = r2;
             }
         }
     }
