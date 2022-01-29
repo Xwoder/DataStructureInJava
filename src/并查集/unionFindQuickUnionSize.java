@@ -1,7 +1,7 @@
 package 并查集;
 
 /**
- * 并查集，基于 Quick Union 的实现，并使用基于 size 的优化
+ * 并查集，基于 Quick Union 的实现，并使用基于 Size 的优化
  */
 public class unionFindQuickUnionSize extends UnionFind_QuickUnion {
 
