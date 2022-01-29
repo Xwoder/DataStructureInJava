@@ -23,6 +23,12 @@ public abstract class UnionFind {
         return find(v1) == find(v2);
     }
 
+    /**
+     * 查找指定节点v的父节点或根节点
+     *
+     * @param v 指定节点
+     * @return 父节点或根节点
+     */
     public abstract int find(int v);
 
     protected void rangeCheck(int v) {
