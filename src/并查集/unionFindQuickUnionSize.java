@@ -3,7 +3,7 @@ package 并查集;
 /**
  * 并查集，基于 Quick Union 的实现，并使用基于 Size 的优化
  */
-public class unionFindQuickUnionSize extends UnionFind_QuickUnion {
+public class unionFindQuickUnionSize extends unionFindQuickUnion {
 
     private int[] sizes;
 
