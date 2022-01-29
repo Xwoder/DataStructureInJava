@@ -1,4 +1,4 @@
-package 并查集;
+package 并查集.QuickUnion;
 
 /**
  * 并查集，基于 Quick Union 的实现，并使用基于 Size 的优化

@@ -1,6 +1,7 @@
-package 并查集;
+package 并查集.QuickUnion;
 
 import Tools.tools.Asserts;
+import 并查集.UnionFind;
 
 /**
  * 并查集，基于 Quick Union 的实现
