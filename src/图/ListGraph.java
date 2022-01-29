@@ -254,7 +254,29 @@ public class ListGraph<V, W extends Comparable<W>> extends Graph<V, W> {
             return null;
         }
 
-        return minimumSpanningTreeOnPrim();
+        if (new Random().nextInt() % 2 == 0) {
+            System.out.println("Prim");
+            return minimumSpanningTreeOnPrim();
+        } else {
+            System.out.println("Kruskal");
+            return minimumSpanningTreeOnKruskal();
+        }
+    }
+
+    public Set<EdgeInfo<V, W>> minimumSpanningTreeOnKruskal() {
+        if (vertices.size() == 0) {
+            return null;
+        }
+
+        MyHeap<Edge<V, W>> edgeHeap = new MyBinaryHeap<>(this.edges, new Comparator<Edge<V, W>>() {
+            @Override
+            public int compare(Edge<V, W> o1, Edge<V, W> o2) {
+                return o2.compareTo(o1);
+            }
+        });
+
+
+        return null;
     }
 
     public Set<EdgeInfo<V, W>> minimumSpanningTreeOnPrim() {
@@ -268,14 +290,12 @@ public class ListGraph<V, W extends Comparable<W>> extends Graph<V, W> {
 
         verticesAdded.add(vertex);
 
-        MyHeap<Edge<V, W>> heap = new MyBinaryHeap<>(
-                vertex.outEdges,
-                new Comparator<Edge<V, W>>() {
-                    @Override
-                    public int compare(Edge<V, W> o1, Edge<V, W> o2) {
-                        return o2.compareTo(o1);
-                    }
-                });
+        MyHeap<Edge<V, W>> heap = new MyBinaryHeap<>(vertex.outEdges, new Comparator<Edge<V, W>>() {
+            @Override
+            public int compare(Edge<V, W> o1, Edge<V, W> o2) {
+                return o2.compareTo(o1);
+            }
+        });
 
         while (!heap.isEmpty() && verticesAdded.size() < verticesSize()) {
             Edge<V, W> edge = heap.remove();
@@ -370,6 +390,11 @@ public class ListGraph<V, W extends Comparable<W>> extends Graph<V, W> {
         @Override
         public int compareTo(Edge<V, W> o) {
             return this.weight.compareTo(o.weight);
+        }
+
+        @Override
+        public String toString() {
+            return "Edge{" + "from=" + from.value + ", to=" + to.value + ", weight=" + weight + '}';
         }
     }
 
