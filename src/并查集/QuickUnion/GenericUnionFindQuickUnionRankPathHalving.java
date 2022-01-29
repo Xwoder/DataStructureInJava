@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * 支持泛型的并查集，基于 Quick Union 的实现，并使用基于 Rank 和 Path Splitting 的优化
+ */
 public class GenericUnionFindQuickUnionRankPathHalving<V> {
 
     private Map<V, Node<V>> nodeMap = new HashMap<>();
