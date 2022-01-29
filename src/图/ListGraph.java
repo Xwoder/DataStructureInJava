@@ -290,12 +290,14 @@ public class ListGraph<V, W extends Comparable<W>> extends Graph<V, W> {
 
         verticesAdded.add(vertex);
 
-        MyHeap<Edge<V, W>> heap = new MyBinaryHeap<>(vertex.outEdges, new Comparator<Edge<V, W>>() {
-            @Override
-            public int compare(Edge<V, W> o1, Edge<V, W> o2) {
-                return o2.compareTo(o1);
-            }
-        });
+        MyHeap<Edge<V, W>> heap = new MyBinaryHeap<>(
+                vertex.outEdges,
+                new Comparator<Edge<V, W>>() {
+                    @Override
+                    public int compare(Edge<V, W> o1, Edge<V, W> o2) {
+                        return o2.compareTo(o1);
+                    }
+                });
 
         while (!heap.isEmpty() && verticesAdded.size() < verticesSize()) {
             Edge<V, W> edge = heap.remove();
@@ -394,7 +396,11 @@ public class ListGraph<V, W extends Comparable<W>> extends Graph<V, W> {
 
         @Override
         public String toString() {
-            return "Edge{" + "from=" + from.value + ", to=" + to.value + ", weight=" + weight + '}';
+            return "Edge{" +
+                    "from=" + from.value +
+                    ", to=" + to.value +
+                    ", weight=" + weight +
+                    '}';
         }
     }
 
