@@ -3,11 +3,11 @@ package 并查集;
 /**
  * 并查集，基于 Quick Union 的实现，并使用基于 size 的优化
  */
-public class UnionFind_QuickUnion_Size extends UnionFind_QuickUnion {
+public class unionFindQuickUnionSize extends UnionFind_QuickUnion {
 
     private int[] sizes;
 
-    public UnionFind_QuickUnion_Size(int capacity) {
+    public unionFindQuickUnionSize(int capacity) {
         super(capacity);
         sizes = new int[capacity];
 

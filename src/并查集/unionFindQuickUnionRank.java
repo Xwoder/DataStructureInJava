@@ -3,11 +3,11 @@ package 并查集;
 /**
  * 并查集，基于 Quick Union 的实现，并使用基于 rank 的优化
  */
-public class UnionFind_QuickUnion_Rank extends UnionFind_QuickUnion {
+public class unionFindQuickUnionRank extends UnionFind_QuickUnion {
 
     private int[] ranks;
 
-    public UnionFind_QuickUnion_Rank(int capacity) {
+    public unionFindQuickUnionRank(int capacity) {
         super(capacity);
         ranks = new int[capacity];
 

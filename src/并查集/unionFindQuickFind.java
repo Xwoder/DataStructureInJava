@@ -5,14 +5,14 @@ import Tools.tools.Asserts;
 /**
  * 并查集，基于 Quick Find 的实现
  */
-public class UnionFind_QuickFind extends UnionFind {
+public class unionFindQuickFind extends UnionFind {
 
-    public UnionFind_QuickFind(int capacity) {
+    public unionFindQuickFind(int capacity) {
         super(capacity);
     }
 
     public static void main(String[] args) {
-        UnionFind_QuickFind quickFindUnionFind = new UnionFind_QuickFind(12);
+        unionFindQuickFind quickFindUnionFind = new unionFindQuickFind(12);
         quickFindUnionFind.union(0, 1);
         quickFindUnionFind.union(0, 3);
         quickFindUnionFind.union(0, 4);
