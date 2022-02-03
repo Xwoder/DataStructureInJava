@@ -1,10 +1,10 @@
 package 图;
 
+import 并查集.QuickUnion.GenericUnionFindQuickUnionRankPathHalving;
 import 顺序存储二叉堆.MyBinaryHeap;
 import 顺序存储二叉堆.MyHeap;
 
 import java.util.*;
-import java.util.function.BiConsumer;
 
 public class ListGraph<V, W extends Comparable<W>> extends Graph<V, W> {
 
@@ -26,12 +26,7 @@ public class ListGraph<V, W extends Comparable<W>> extends Graph<V, W> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Graph: {").append("\n");
-        vertices.forEach(new BiConsumer<V, Vertex<V, W>>() {
-            @Override
-            public void accept(V v, Vertex<V, W> vertex) {
-                sb.append("\t").append(vertex).append("\n");
-            }
-        });
+        vertices.forEach((v, vertex) -> sb.append("\t").append(vertex).append("\n"));
         sb.append("}");
 
         return sb.toString();
@@ -250,7 +245,7 @@ public class ListGraph<V, W extends Comparable<W>> extends Graph<V, W> {
 
     @Override
     public Set<EdgeInfo<V, W>> minimumSpanningTree() {
-        if (vertices.size() == 0) {
+        if (verticesSize() <= 1) {
             return null;
         }
 
@@ -263,22 +258,10 @@ public class ListGraph<V, W extends Comparable<W>> extends Graph<V, W> {
         }
     }
 
-    public Set<EdgeInfo<V, W>> minimumSpanningTreeOnKruskal() {
-        if (vertices.size() == 0) {
-            return null;
-        }
-
-        MyHeap<Edge<V, W>> edgeHeap = new MyBinaryHeap<>(this.edges, new Comparator<Edge<V, W>>() {
-            @Override
-            public int compare(Edge<V, W> o1, Edge<V, W> o2) {
-                return o2.compareTo(o1);
-            }
-        });
-
-
-        return null;
-    }
-
+    /**
+     * 最小生成树，基于 Prim 算法实现
+     */
+    @Override
     public Set<EdgeInfo<V, W>> minimumSpanningTreeOnPrim() {
         if (vertices.size() == 0) {
             return null;
@@ -290,14 +273,7 @@ public class ListGraph<V, W extends Comparable<W>> extends Graph<V, W> {
 
         verticesAdded.add(vertex);
 
-        MyHeap<Edge<V, W>> heap = new MyBinaryHeap<>(
-                vertex.outEdges,
-                new Comparator<Edge<V, W>>() {
-                    @Override
-                    public int compare(Edge<V, W> o1, Edge<V, W> o2) {
-                        return o2.compareTo(o1);
-                    }
-                });
+        MyHeap<Edge<V, W>> heap = new MyBinaryHeap<>(vertex.outEdges, Comparator.reverseOrder());
 
         while (!heap.isEmpty() && verticesAdded.size() < verticesSize()) {
             Edge<V, W> edge = heap.remove();
@@ -313,6 +289,178 @@ public class ListGraph<V, W extends Comparable<W>> extends Graph<V, W> {
         return edgeInfos;
     }
 
+    /**
+     * 最小生成树，基于 Kruskal 算法实现
+     */
+    @Override
+    public Set<EdgeInfo<V, W>> minimumSpanningTreeOnKruskal() {
+        if (vertices.size() <= 1) {
+            return null;
+        }
+
+        MyHeap<Edge<V, W>> edgeMinHeap = new MyBinaryHeap<>(this.edges, Comparator.reverseOrder());
+
+        GenericUnionFindQuickUnionRankPathHalving<Vertex<V, W>> unionFind = new GenericUnionFindQuickUnionRankPathHalving<>();
+        vertices.forEach((v, vertex) -> unionFind.add(vertex));
+
+        Set<EdgeInfo<V, W>> edgeInfos = new HashSet<>();
+
+        while (!edgeMinHeap.isEmpty() && edgeInfos.size() < edgesSize() - 1) {
+            Edge<V, W> edge = edgeMinHeap.remove();
+
+            if (unionFind.isSame(edge.from, edge.to)) {
+                continue;
+            }
+
+            edgeInfos.add(edge.info());
+            unionFind.union(edge.from, edge.to);
+        }
+
+
+        return edgeInfos;
+    }
+
+    @Override
+    public Map<V, PathInfo<V, W>> shortestPathDijkstra(V begin) {
+        Vertex<V, W> beginVertex = vertices.get(begin);
+        if (beginVertex == null) {
+            return null;
+        }
+
+        /* 已经被选择的路径 */
+        Map<V, PathInfo<V, W>> selectedShortestPathMap = new HashMap<>();
+        Map<Vertex<V, W>, PathInfo<V, W>> unselectedShortestPathMap = new HashMap<>();
+
+        for (Edge<V, W> outEdge : beginVertex.outEdges) {
+            final PathInfo<V, W> pathInfo = new PathInfo<>();
+            pathInfo.weight = outEdge.weight;
+            pathInfo.getEdgeInfoList().add(outEdge.info());
+            unselectedShortestPathMap.put(outEdge.to, pathInfo);
+        }
+
+        while (!unselectedShortestPathMap.isEmpty()) {
+            // 从还在桌面上的小石头选出最短的绳子
+            final Map.Entry<Vertex<V, W>, PathInfo<V, W>> minWeightPath = selectMinWeightPath(unselectedShortestPathMap);
+
+            // 最短的绳子连接的石头
+            final Vertex<V, W> minWeightPathVertex = minWeightPath.getKey();
+
+            // 将石头提起来，放入到已提起来的石子的map，并保存路径
+            selectedShortestPathMap.put(minWeightPathVertex.value, minWeightPath.getValue());
+
+            unselectedShortestPathMap.remove(minWeightPathVertex);
+
+            for (Edge<V, W> minWeightPathVertexOutEdge : minWeightPathVertex.outEdges) {
+                Vertex<V, W> endVertex = minWeightPathVertexOutEdge.to;
+                if (selectedShortestPathMap.containsKey(endVertex.value) || endVertex.equals(beginVertex)) {
+                    break;
+                }
+                relaxForDijkstra(minWeightPath.getValue(),
+                        minWeightPathVertexOutEdge,
+                        unselectedShortestPathMap);
+            }
+        }
+
+        return selectedShortestPathMap;
+    }
+
+    @Override
+    public Map<V, PathInfo<V, W>> shortestPathBellmanFord(V begin) {
+        Vertex<V, W> beginVertex = vertices.get(begin);
+        if (beginVertex == null) {
+            return null;
+        }
+
+        Map<V, PathInfo<V, W>> selectedPathMap = new HashMap<>();
+        selectedPathMap.put(begin, new PathInfo<>(weightManager.zero()));
+
+        int count = vertices.size() - 1;
+        for (int i = 0; i < count; i++) { // v - 1 次
+            for (Edge<V, W> edge : edges) {
+                PathInfo<V, W> fromPathInfo = selectedPathMap.get(edge.from.value);
+                if (fromPathInfo == null) {
+                    continue;
+                }
+                relaxForBellmanFord(edge, fromPathInfo, selectedPathMap);
+            }
+        }
+
+        for (Edge<V, W> edge : edges) {
+            PathInfo<V, W> fromPath = selectedPathMap.get(edge.from.value);
+            if (fromPath == null) {
+                continue;
+            }
+            if (relaxForBellmanFord(edge, fromPath, selectedPathMap)) {
+                System.out.println("有负权环");
+                return null;
+            }
+        }
+
+        selectedPathMap.remove(begin);
+        return selectedPathMap;
+    }
+
+    private boolean relaxForBellmanFord(Edge<V, W> edge, PathInfo<V, W> fromPathInfo, Map<V, PathInfo<V, W>> selectedPathMap) {
+        // 新的可选择的最短路径：beginVertex到edge.from的最短路径 + edge.weight
+        W newWeight = weightManager.add(fromPathInfo.weight, edge.weight);
+        // 以前的最短路径：beginVertex到edge.to的最短路径
+        PathInfo<V, W> oldPath = selectedPathMap.get(edge.to.value);
+        if (oldPath != null && weightManager.compare(newWeight, oldPath.weight) >= 0) {
+            return false;
+        }
+
+        if (oldPath == null) {
+            oldPath = new PathInfo<>();
+            selectedPathMap.put(edge.to.value, oldPath);
+        } else {
+            oldPath.getEdgeInfoList().clear();
+        }
+
+        oldPath.weight = newWeight;
+        oldPath.getEdgeInfoList().addAll(fromPathInfo.getEdgeInfoList());
+        oldPath.getEdgeInfoList().add(edge.info());
+
+        return true;
+    }
+
+    /**
+     * 松弛操作
+     */
+    private void relaxForDijkstra(PathInfo<V, W> minWeightPathInfo,
+                                  Edge<V, W> minWeightPathVertexOutEdge,
+                                  Map<Vertex<V, W>, PathInfo<V, W>> unselectedShortestPathMap) {
+        W newWeight = weightManager.add(minWeightPathInfo.weight, minWeightPathVertexOutEdge.weight);
+        PathInfo<V, W> oldPath = unselectedShortestPathMap.get(minWeightPathVertexOutEdge.to);
+        if (oldPath == null) {
+            oldPath = new PathInfo<>();
+            unselectedShortestPathMap.put(minWeightPathVertexOutEdge.to, oldPath);
+        } else {
+            W oldWeight = oldPath.weight;
+            if (weightManager.compare(newWeight, oldWeight) >= 0) {
+                return;
+            }
+
+            oldPath.getEdgeInfoList().clear();
+        }
+        oldPath.weight = newWeight;
+        oldPath.getEdgeInfoList().addAll(minWeightPathInfo.getEdgeInfoList());
+        oldPath.getEdgeInfoList().add(minWeightPathVertexOutEdge.info());
+    }
+
+    private Map.Entry<Vertex<V, W>, PathInfo<V, W>> selectMinWeightPath(Map<Vertex<V, W>, PathInfo<V, W>> pathMap) {
+        final Iterator<Map.Entry<Vertex<V, W>, PathInfo<V, W>>> iter = pathMap.entrySet().iterator();
+        Map.Entry<Vertex<V, W>, PathInfo<V, W>> minWeightPath = iter.next();
+
+        while (iter.hasNext()) {
+            Map.Entry<Vertex<V, W>, PathInfo<V, W>> path = iter.next();
+            if (weightManager.compare(path.getValue().weight, minWeightPath.getValue().weight) < 0) {
+                minWeightPath = path;
+            }
+        }
+
+        return minWeightPath;
+    }
+
 
     @Override
     public List<V> topologicalSorting() {
@@ -320,15 +468,12 @@ public class ListGraph<V, W extends Comparable<W>> extends Graph<V, W> {
         Queue<Vertex<V, W>> queue = new LinkedList<>();
         Map<Vertex<V, W>, Integer> inDegreeMap = new HashMap<>();
 
-        this.vertices.forEach(new BiConsumer<V, Vertex<V, W>>() {
-            @Override
-            public void accept(V v, Vertex<V, W> vertex) {
-                final int inDegree = vertex.inEdges.size();
-                if (inDegree == 0) {
-                    queue.add(vertex);
-                } else {
-                    inDegreeMap.put(vertex, inDegree);
-                }
+        this.vertices.forEach((v, vertex) -> {
+            final int inDegree = vertex.inEdges.size();
+            if (inDegree == 0) {
+                queue.add(vertex);
+            } else {
+                inDegreeMap.put(vertex, inDegree);
             }
         });
 
@@ -369,7 +514,7 @@ public class ListGraph<V, W extends Comparable<W>> extends Graph<V, W> {
         }
 
         EdgeInfo<V, W> info() {
-            return new EdgeInfo<V, W>(from.value, to.value, weight);
+            return new EdgeInfo<>(from.value, to.value, weight);
         }
 
         @Override
@@ -396,11 +541,7 @@ public class ListGraph<V, W extends Comparable<W>> extends Graph<V, W> {
 
         @Override
         public String toString() {
-            return "Edge{" +
-                    "from=" + from.value +
-                    ", to=" + to.value +
-                    ", weight=" + weight +
-                    '}';
+            return "Edge{" + "from=" + from.value + ", to=" + to.value + ", weight=" + weight + '}';
         }
     }
 

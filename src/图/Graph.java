@@ -1,6 +1,8 @@
 package 图;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public abstract class Graph<V, W> {
@@ -87,6 +89,13 @@ public abstract class Graph<V, W> {
      */
     abstract Set<EdgeInfo<V, W>> minimumSpanningTree();
 
+    abstract Set<EdgeInfo<V, W>> minimumSpanningTreeOnPrim();
+
+    abstract Set<EdgeInfo<V, W>> minimumSpanningTreeOnKruskal();
+
+    public abstract Map<V, PathInfo<V, W>> shortestPathDijkstra(V v);
+    public abstract Map<V, PathInfo<V, W>> shortestPathBellmanFord(V v);
+
     abstract List<V> topologicalSorting();
 
     public interface WeightManager<W> {
@@ -99,6 +108,38 @@ public abstract class Graph<V, W> {
 
     public interface VertexVisitor<V> {
         void visit(V value);
+    }
+
+    public static class PathInfo<V, W> {
+        protected W weight;
+        private List<EdgeInfo<V, W>> edgeInfoList;
+
+        public PathInfo() {
+            edgeInfoList = new LinkedList<>();
+        }
+
+        public PathInfo(W weight) {
+            this();
+            this.weight = weight;
+
+        }
+
+        public List<EdgeInfo<V, W>> getEdgeInfoList() {
+            return edgeInfoList;
+        }
+
+        public void setEdgeInfoList(List<EdgeInfo<V, W>> edgeInfoList) {
+            this.edgeInfoList = edgeInfoList;
+        }
+
+
+        @Override
+        public String toString() {
+            return "PathInfo{" +
+                    "weight=" + weight +
+                    ", edgeInfoList=" + edgeInfoList +
+                    '}';
+        }
     }
 
     public static class EdgeInfo<V, W> {
@@ -126,11 +167,9 @@ public abstract class Graph<V, W> {
 
         @Override
         public String toString() {
-            return "EdgeInfo{" +
-                    "from=" + from +
-                    ", to=" + to +
-                    ", weight=" + weight +
-                    '}';
+            return "EdgeInfo{" + "from=" + from + ", to=" + to + ", weight=" + weight + '}';
         }
+
+
     }
 }
