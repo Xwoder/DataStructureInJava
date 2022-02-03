@@ -330,13 +330,8 @@ public class ListGraph<V, W extends Comparable<W>> extends Graph<V, W> {
         /* 已经被选择的路径 */
         Map<V, PathInfo<V, W>> selectedShortestPathMap = new HashMap<>();
         Map<Vertex<V, W>, PathInfo<V, W>> unselectedShortestPathMap = new HashMap<>();
+        unselectedShortestPathMap.put(beginVertex, new PathInfo<>(weightManager.zero()));
 
-        for (Edge<V, W> outEdge : beginVertex.outEdges) {
-            final PathInfo<V, W> pathInfo = new PathInfo<>();
-            pathInfo.weight = outEdge.weight;
-            pathInfo.getEdgeInfoList().add(outEdge.info());
-            unselectedShortestPathMap.put(outEdge.to, pathInfo);
-        }
 
         while (!unselectedShortestPathMap.isEmpty()) {
             // 从还在桌面上的小石头选出最短的绳子
@@ -361,6 +356,7 @@ public class ListGraph<V, W extends Comparable<W>> extends Graph<V, W> {
             }
         }
 
+        selectedShortestPathMap.remove(begin);
         return selectedShortestPathMap;
     }
 
