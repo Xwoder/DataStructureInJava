@@ -396,6 +396,75 @@ public class ListGraph<V, W extends Comparable<W>> extends Graph<V, W> {
         return selectedPathMap;
     }
 
+    @Override
+    public Map<V, Map<V, PathInfo<V, W>>> shortestPathFloyd() {
+        Map<V, Map<V, PathInfo<V, W>>> pathMap = new HashMap<>();
+
+        for (Edge<V, W> edge : edges) {
+            Map<V, PathInfo<V, W>> toPathMap = pathMap.get(edge.from.value);
+            if (toPathMap == null) {
+                toPathMap = new HashMap<>();
+                pathMap.put(edge.from.value, toPathMap);
+            }
+
+            PathInfo<V, W> pathInfo = new PathInfo<>(edge.weight);
+            pathInfo.getEdgeInfoList().add(edge.info());
+            toPathMap.put(edge.to.value, pathInfo);
+        }
+
+        vertices.forEach((v1, vertex1) -> {
+            vertices.forEach((v3, vertex3) -> {
+                vertices.forEach((v2, vertex2) -> {
+                    if (v1.equals(v2) || v1.equals(v3) || v2.equals(v3)) {
+                        return;
+                    }
+
+
+                    final PathInfo<V, W> pathInfoFromV1ToV2 = getPathInfo(v1, v2, pathMap);
+                    if (pathInfoFromV1ToV2 == null) {
+                        return;
+                    }
+
+                    final PathInfo<V, W> pathInfoFromV2ToV3 = getPathInfo(v2, v3, pathMap);
+                    if (pathInfoFromV2ToV3 == null) {
+                        return;
+                    }
+
+                    PathInfo<V, W> pathInfoFromV1ToV3 = getPathInfo(v1, v3, pathMap);
+
+                    System.out.println(v1 + ", " + v2 + ", " + v3);
+
+                    final W undirectedPathWeight = weightManager.add(pathInfoFromV1ToV2.weight, pathInfoFromV2ToV3.weight);
+                    if (pathInfoFromV1ToV3 != null && weightManager.compare(undirectedPathWeight, pathInfoFromV1ToV3.weight) >= 0) {
+                        return;
+                    }
+
+                    if (pathInfoFromV1ToV3 == null) {
+                        pathInfoFromV1ToV3 = new PathInfo<>(undirectedPathWeight);
+                    } else {
+                        pathInfoFromV1ToV3.getEdgeInfoList().clear();
+                    }
+
+
+                    pathMap.get(v1).put(v3, pathInfoFromV1ToV3);
+
+
+                    pathInfoFromV1ToV3.getEdgeInfoList().addAll(pathInfoFromV1ToV2.getEdgeInfoList());
+                    pathInfoFromV1ToV3.getEdgeInfoList().addAll(pathInfoFromV2ToV3.getEdgeInfoList());
+
+
+                });
+            });
+        });
+
+        return pathMap;
+    }
+
+    private PathInfo<V, W> getPathInfo(V from, V to, Map<V, Map<V, PathInfo<V, W>>> pathMap) {
+        Map<V, PathInfo<V, W>> fromPathMap = pathMap.get(from);
+        return fromPathMap == null ? null : fromPathMap.get(to);
+    }
+
     private boolean relaxForBellmanFord(Edge<V, W> edge, PathInfo<V, W> fromPathInfo, Map<V, PathInfo<V, W>> selectedPathMap) {
         // 新的可选择的最短路径：beginVertex到edge.from的最短路径 + edge.weight
         W newWeight = weightManager.add(fromPathInfo.weight, edge.weight);

@@ -95,6 +95,7 @@ public abstract class Graph<V, W> {
 
     public abstract Map<V, PathInfo<V, W>> shortestPathDijkstra(V v);
     public abstract Map<V, PathInfo<V, W>> shortestPathBellmanFord(V v);
+    public abstract Map<V, Map<V, PathInfo<V, W>>> shortestPathFloyd();
 
     abstract List<V> topologicalSorting();
 
